@@ -1,0 +1,6 @@
+Vite + Vue 3 + Pinia + Element Plus + dayjs + taiwan-id-validator + xlsx 手把手教我如何重零開始建立一個新專案 (使用 yarn)
+
+
+
+Vite + Vue 3 + Pinia + Antd Vue + dayjs + taiwan-id-validator + xlsx 手把手教我如何重零開始建立一個新專案 (使用 yarn)
+並且 App.vue 要改成 
