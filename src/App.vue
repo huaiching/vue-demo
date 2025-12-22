@@ -52,7 +52,7 @@ const toggleDark = useToggle(isDark)
 
       <el-container>
         <!-- Side Menu -->
-        <el-aside :width="isCollapse ? '64px' : '200px'">
+        <el-aside :width="isCollapse ? '64px' : '300px'">
           <el-menu router :collapse="isCollapse" :default-active="route.path" :collapse-transition="true">
             <MenuItem v-for="route in routesList" :key="route.path" :route="route" />
           </el-menu>
@@ -87,7 +87,7 @@ const toggleDark = useToggle(isDark)
 
 .title {
   margin: 0;
-  font-size: 18px;
+  font-size: 24px;
 }
 
 /* Aside */
