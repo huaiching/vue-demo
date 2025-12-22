@@ -1309,6 +1309,8 @@ yarn add -D @element-plus/icons-vue unplugin-auto-import unplugin-vue-components
 <ul>
 <li><p>全局引入 Element Plus 的 CSS（全域）</p>
 </li>
+<li><p>全局引入 Element 黑暗模式</p>
+</li>
 <li><p>全局引入 dayjs</p>
 </li>
 <li><p>全局引入 Element Icon</p>
@@ -1320,6 +1322,7 @@ yarn add -D @element-plus/icons-vue unplugin-auto-import unplugin-vue-components
 <span class="token keyword">import</span> App <span class="token keyword">from</span> <span class="token string">'./App.vue'</span>
 <span class="token keyword">import</span> router <span class="token keyword">from</span> <span class="token string">'./router'</span>
 <span class="token keyword">import</span> <span class="token string">'element-plus/dist/index.css'</span>
+<span class="token keyword">import</span> <span class="token string">'element-plus/theme-chalk/dark/css-vars.css'</span>
 <span class="token keyword">import</span> <span class="token operator">*</span> <span class="token keyword">as</span> ElementPlusIconsVue <span class="token keyword">from</span> <span class="token string">'@element-plus/icons-vue'</span>
 <span class="token keyword">import</span> dayjs <span class="token keyword">from</span> <span class="token string">'dayjs'</span>
 
@@ -1384,15 +1387,15 @@ app<span class="token punctuation">.</span>config<span class="token punctuation"
         <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>el-icon</span><span class="token punctuation">&gt;</span></span>
         <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>span</span><span class="token punctuation">&gt;</span></span>{{ route.name }}<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>span</span><span class="token punctuation">&gt;</span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>el-menu-item</span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>template</span><span class="token punctuation">&gt;</span></span>
-</code></pre>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>template</span><span class="token punctuation">&gt;</span></span></code></pre>
 <p>開啟 <code>src/App.vue</code>，將其修改為下面的程式</p>
 <pre><code class="fenced-code-block language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">setup</span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
 <span class="token keyword">import</span> <span class="token punctuation">{</span> RouterView<span class="token punctuation">,</span> useRoute <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'vue-router'</span>
 <span class="token keyword">import</span> <span class="token punctuation">{</span> ref <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'vue'</span>
 <span class="token keyword">import</span> router <span class="token keyword">from</span> <span class="token string">'./router'</span>
 <span class="token keyword">import</span> MenuItem <span class="token keyword">from</span> <span class="token string">'./util/MenuItem.vue'</span>
-<span class="token keyword">import</span> <span class="token punctuation">{</span> Fold<span class="token punctuation">,</span> Expand <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'@element-plus/icons-vue'</span>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> Fold<span class="token punctuation">,</span> Expand<span class="token punctuation">,</span> Moon<span class="token punctuation">,</span> Sunny <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'@element-plus/icons-vue'</span>
+
 
 <span class="token keyword">const</span> route <span class="token operator">=</span> <span class="token function">useRoute</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
 
@@ -1403,6 +1406,15 @@ app<span class="token punctuation">.</span>config<span class="token punctuation"
 <span class="token keyword">const</span> routesList <span class="token operator">=</span> router<span class="token punctuation">.</span>options<span class="token punctuation">.</span>routes<span class="token punctuation">.</span><span class="token function">filter</span><span class="token punctuation">(</span><span class="token parameter">route</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
   <span class="token keyword">return</span> route<span class="token punctuation">.</span>component <span class="token operator">||</span> route<span class="token punctuation">.</span>children<span class="token operator">?.</span>length <span class="token operator">&gt;</span> <span class="token number">0</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+<span class="token comment">// 黑暗模式切換（使用 VueUse）</span>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> useDark<span class="token punctuation">,</span> useToggle <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'@vueuse/core'</span>
+<span class="token keyword">const</span> isDark <span class="token operator">=</span> <span class="token function">useDark</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  <span class="token literal-property property">valueDark</span><span class="token operator">:</span> <span class="token string">'dark'</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">valueLight</span><span class="token operator">:</span> <span class="token string">'light'</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">storageKey</span><span class="token operator">:</span> <span class="token string">'vue-notes-theme'</span><span class="token punctuation">,</span>  <span class="token comment">// 儲存到 localStorage，保持偏好</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token keyword">const</span> toggleDark <span class="token operator">=</span> <span class="token function">useToggle</span><span class="token punctuation">(</span>isDark<span class="token punctuation">)</span>
 </span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
 
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>template</span><span class="token punctuation">&gt;</span></span>
@@ -1420,6 +1432,13 @@ app<span class="token punctuation">.</span>config<span class="token punctuation"
             <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>el-icon</span><span class="token punctuation">&gt;</span></span>
           <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>el-button</span><span class="token punctuation">&gt;</span></span>
         <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+
+        <span class="token comment">&lt;!-- 黑暗模式切換按鈕（放在標題右邊） --&gt;</span>
+          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>el-button</span> <span class="token attr-name">text</span> <span class="token attr-name">@click</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>toggleDark()<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>el-icon</span><span class="token punctuation">&gt;</span></span>
+              <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>component</span> <span class="token attr-name">:is</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>isDark ? Sunny : Moon<span class="token punctuation">"</span></span> <span class="token punctuation">/&gt;</span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>el-icon</span><span class="token punctuation">&gt;</span></span>
+          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>el-button</span><span class="token punctuation">&gt;</span></span>
       <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>el-header</span><span class="token punctuation">&gt;</span></span>
 
       <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>el-container</span><span class="token punctuation">&gt;</span></span>
@@ -1447,7 +1466,6 @@ app<span class="token punctuation">.</span>config<span class="token punctuation"
 <span class="token comment">/* Header */</span>
 <span class="token selector">.el-header</span> <span class="token punctuation">{</span>
   <span class="token property">color</span><span class="token punctuation">:</span> #409eff<span class="token punctuation">;</span>
-  <span class="token property">background-color</span><span class="token punctuation">:</span> white<span class="token punctuation">;</span>
   <span class="token property">display</span><span class="token punctuation">:</span> flex<span class="token punctuation">;</span>
   <span class="token property">align-items</span><span class="token punctuation">:</span> center<span class="token punctuation">;</span>
 <span class="token punctuation">}</span>
@@ -1465,7 +1483,6 @@ app<span class="token punctuation">.</span>config<span class="token punctuation"
 
 <span class="token comment">/* Aside */</span>
 <span class="token selector">.el-aside</span> <span class="token punctuation">{</span>
-  <span class="token property">background-color</span><span class="token punctuation">:</span> #f0f2f5<span class="token punctuation">;</span>
   <span class="token property">transition</span><span class="token punctuation">:</span> width 0.3s ease<span class="token punctuation">;</span>
 <span class="token punctuation">}</span>
 
