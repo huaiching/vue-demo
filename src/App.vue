@@ -3,7 +3,8 @@ import { RouterView, useRoute } from 'vue-router'
 import { ref } from 'vue'
 import router from './router'
 import MenuItem from './util/MenuItem.vue'
-import { Fold, Expand } from '@element-plus/icons-vue'
+import { Fold, Expand, Moon, Sunny } from '@element-plus/icons-vue'
+
 
 const route = useRoute()
 
@@ -14,6 +15,15 @@ const isCollapse = ref(false)
 const routesList = router.options.routes.filter(route => {
   return route.component || route.children?.length > 0
 })
+
+// 黑暗模式切換（使用 VueUse）
+import { useDark, useToggle } from '@vueuse/core'
+const isDark = useDark({
+  valueDark: 'dark',
+  valueLight: 'light',
+  storageKey: 'vue-notes-theme',  // 儲存到 localStorage，保持偏好
+})
+const toggleDark = useToggle(isDark)
 </script>
 
 <template>
@@ -31,6 +41,13 @@ const routesList = router.options.routes.filter(route => {
             </el-icon>
           </el-button>
         </div>
+
+        <!-- 黑暗模式切換按鈕（放在標題右邊） -->
+          <el-button text @click="toggleDark()">
+            <el-icon>
+              <component :is="isDark ? Sunny : Moon" />
+            </el-icon>
+          </el-button>
       </el-header>
 
       <el-container>
@@ -58,7 +75,6 @@ const routesList = router.options.routes.filter(route => {
 /* Header */
 .el-header {
   color: #409eff;
-  background-color: white;
   display: flex;
   align-items: center;
 }
@@ -76,7 +92,6 @@ const routesList = router.options.routes.filter(route => {
 
 /* Aside */
 .el-aside {
-  background-color: #f0f2f5;
   transition: width 0.3s ease;
 }
 
