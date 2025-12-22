@@ -1305,7 +1305,14 @@ yarn add -D @element-plus/icons-vue unplugin-auto-import unplugin-vue-components
     <span class="token punctuation">}</span><span class="token punctuation">,</span>
   <span class="token punctuation">}</span><span class="token punctuation">,</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span></code></pre>
-<h2 class="atx" id="4-調整-maints">4. 調整 main.ts</h2>
+<h2 class="atx" id="4-設定-typescript-辨識-vue-檔案">4. 設定 TypeScript 辨識 vue 檔案</h2>
+<p>於 <code>src</code> 新增檔案 <code>shims-vue.d.ts</code></p>
+<pre><code class="fenced-code-block language-ts"><span class="token keyword">declare</span> <span class="token keyword">module</span> <span class="token string">'*.vue'</span> <span class="token punctuation">{</span>
+  <span class="token keyword">import</span> <span class="token keyword">type</span> <span class="token punctuation">{</span> DefineComponent <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'vue'</span>
+  <span class="token keyword">const</span> component<span class="token operator">:</span> DefineComponent<span class="token operator">&lt;</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token builtin">any</span><span class="token operator">&gt;</span>
+  <span class="token keyword">export</span> <span class="token keyword">default</span> component
+<span class="token punctuation">}</span></code></pre>
+<h2 class="atx" id="5-調整-maints">5. 調整 main.ts</h2>
 <ul>
 <li><p>全局引入 Element Plus 的 CSS（全域）</p>
 </li>
@@ -1490,8 +1497,7 @@ app<span class="token punctuation">.</span>config<span class="token punctuation"
   <span class="token property">height</span><span class="token punctuation">:</span> 100%<span class="token punctuation">;</span>
   <span class="token property">border-right</span><span class="token punctuation">:</span> none<span class="token punctuation">;</span>
 <span class="token punctuation">}</span>
-</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>style</span><span class="token punctuation">&gt;</span></span>
-</code></pre>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>style</span><span class="token punctuation">&gt;</span></span></code></pre>
 <h2 class="atx" id="7-設定-範例頁面">7. 設定 範例頁面</h2>
 <p>建立資料夾 <code>src/pages/Home</code>，並新增檔案 <code>index.vue</code>。</p>
 <p>複製貼上 下面的內容</p>
