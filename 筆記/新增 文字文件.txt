@@ -11,3 +11,5 @@ Vite + Vue 3 + Pinia + Antd Vue + dayjs + taiwan-id-validator + xlsx 手把手�
 Markdown All in One  
 
 > F1 > Markdown: Print current document to HTML
+
+Markdown Preview Github Styling
