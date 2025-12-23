@@ -2,8 +2,9 @@
 
 vue 3 的頁面布局，與 傳統 html 類似，分為以下三部分
 
-- `script setup` : JavaScript 部分
+- `script setup lang="ts"` : JavaScript 部分
   - 此為 `vue 3` 的語法糖，會自動將 `邏輯` 暴露給 `template` 使用，減少 `傳統 vue` 開發時的繁複設定
+  - `lang="ts"` : 標示為 `TypeScript`
   - 這裡便會擺放
     - import
     - 官方相關的變數宣告
@@ -18,7 +19,7 @@ vue 3 的頁面布局，與 傳統 html 類似，分為以下三部分
   - 有設定 `scoped` 屬性，該樣式為 本地樣式，只會部屬在當前頁面上，不會渲染到 子組件中
 
 ```html
-<script setup>
+<script setup lang="ts">
     /** Java Script 及 程式邏輯 **/
 </script>
 

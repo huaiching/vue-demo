@@ -25,6 +25,34 @@ const router = createRouter({
         },
       ]
     },
+    {
+      path: "/vueDemo",
+      name: "Vue 測試",
+      meta: { icon: 'Cellphone' },
+      children: [
+        {
+          path: "ReactiveData",
+          name: "響應式頁面",
+          children: [
+            {
+              path: "Ref",
+              name: "ref - 基本響應式數據",
+              component: () => import('@/pages/VueDemo/ReactiveData/Ref/index.vue')
+            },
+            {
+              path: "Reactive",
+              name: "Reactive - 響應式對象",
+              component: () => import('@/pages/VueDemo/ReactiveData/Reactive/index.vue')
+            },
+            {
+              path: "Computed",
+              name: "Computed - 計算屬性",
+              component: () => import('@/pages/VueDemo/ReactiveData/Computed/index.vue')
+            },
+          ]
+        },
+      ]
+    },
   ],
 })
 
