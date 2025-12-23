@@ -12,15 +12,19 @@
 ### 語法
 
 - 宣告
+  
   ```ts
   const 變數 = ref(數值)
   ```
 - Setting
+  
   > 變數.value = 新數值
 - Getting
   - script 
+    
     > 變數.value
   - template
+    
     > {{ 變數 }}
 
 ### 範例
@@ -59,15 +63,19 @@ const add = () => {
 ### 語法
 
 - 宣告
+  
   ```ts
   const 變數 = reactive(數值)
   ```
 - Setting
+  
   > 變數.欄位 = 新數值
 - Getting
   - script 
+    
     > 變數.欄位
   - template
+    
     > {{ 變數.欄位 }}
 
 ### 範例
@@ -118,6 +126,7 @@ const add = () => {
 ### 語法
 
 - 宣告
+  
   ```ts
   cosnt 變數 = computed(() => {
     處理邏輯
@@ -126,8 +135,10 @@ const add = () => {
   ```
 - Getting
   - script 
+    
     > 變數.value
   - template
+    
     > {{ 變數 }}
 
 ### 範例
