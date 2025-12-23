@@ -2,7 +2,7 @@
 import { RouterView, useRoute } from 'vue-router'
 import { ref } from 'vue'
 import router from './router'
-import MenuItem from './util/MenuItem.vue'
+import MenuItem from './Menu/MenuItem.vue'
 import { Fold, Expand, Moon, Sunny } from '@element-plus/icons-vue'
 
 
@@ -13,7 +13,7 @@ const isCollapse = ref(false)
 
 // 可顯示的 routes
 const routesList = router.options.routes.filter(route => {
-  return route.component || route.children?.length > 0
+  return route.name?.length > 0
 })
 
 // 黑暗模式切換（使用 VueUse）
@@ -29,25 +29,29 @@ const toggleDark = useToggle(isDark)
 <template>
   <div class="common-layout">
     <el-container>
-      <!-- Header -->
-      <el-header>
+      <!-- Header --><el-header>
         <div class="header-content">
-          <h1 class="title">Vue 學習筆記</h1>
+          <!-- 左側：標題 + 收合按鈕 -->
+          <div class="header-left">
+            <h1 class="title">Vue 學習筆記</h1>
+            
+            <!-- 縮放按鈕（在標題右邊） -->
+            <el-button text @click="isCollapse = !isCollapse">
+              <el-icon>
+                <component :is="isCollapse ? Expand : Fold" />
+              </el-icon>
+            </el-button>
+          </div>
 
-          <!-- 縮放按鈕（在標題右邊） -->
-          <el-button text @click="isCollapse = !isCollapse">
-            <el-icon>
-              <component :is="isCollapse ? Expand : Fold" />
-            </el-icon>
-          </el-button>
+          <!-- 右側：黑暗模式切換按鈕（最右側） -->
+          <div class="header-right">
+            <el-button text @click="toggleDark()">
+              <el-icon>
+                <component :is="isDark ? Sunny : Moon" />
+              </el-icon>
+            </el-button>
+          </div>
         </div>
-
-        <!-- 黑暗模式切換按鈕（放在標題右邊） -->
-          <el-button text @click="toggleDark()">
-            <el-icon>
-              <component :is="isDark ? Sunny : Moon" />
-            </el-icon>
-          </el-button>
       </el-header>
 
       <el-container>
@@ -80,6 +84,13 @@ const toggleDark = useToggle(isDark)
 }
 
 .header-content {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* 左右兩端對齊 */
+}
+
+.header-left {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -90,7 +101,10 @@ const toggleDark = useToggle(isDark)
   font-size: 24px;
 }
 
-/* Aside */
+.header-right {
+  margin-left: auto; /* 確保在 flex 容器中推到最右 */
+}
+
 .el-aside {
   transition: width 0.3s ease;
 }
