@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory, RouterView } from 'vue-router'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -90,6 +90,22 @@ const router = createRouter({
               path: "emit",
               name: "emit - 資料傳遞 (子傳父)",
               component: () => import('@/pages/VueDemo/PropsAndEmit/emit/index.vue')
+            },
+          ]
+        },
+        {
+          path: "IfAndShow",
+          name: "條件渲染",
+          children: [
+            {
+              path: "v-show",
+              name: "v-show - 簡單的條件渲染",
+              component: () => import('@/pages/VueDemo/IfAndSohw/v-show/index.vue')
+            },
+            {
+              path: "v-if",
+              name: "v-if - 複雜的條件渲染",
+              component: () => import('@/pages/VueDemo/IfAndSohw/v-if/index.vue')
             },
           ]
         },

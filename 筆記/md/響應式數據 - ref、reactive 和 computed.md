@@ -51,8 +51,6 @@ const add = () => {
 </template>
 ```
 
----
-
 ## 2. reactive - 響應式對象
 
 ### 特性
@@ -93,7 +91,6 @@ const add = () => {
 }   
 </script>
 
-
 <template>
     <h1>reactive - 響應式對象</h1>
     <div>
@@ -103,8 +100,6 @@ const add = () => {
 </template>>
 ```
 
---- 
-
 ## 3. ref 與 reactive 的比較
 
 - 使用 `reactive` 的時機
@@ -112,8 +107,6 @@ const add = () => {
 - 使用 `ref` 的時機
   - 資料型態 為 `String`、`Number`、`Boolean` 等基本屬性
   - 變數 `無監聽需求`
-
----
 
 ## 4. computed - 計算屬性
 
