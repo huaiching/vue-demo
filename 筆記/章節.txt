@@ -5,4 +5,11 @@ vue的頁面結構
 屬性綁定 - v-bind
 事件處理 - v-on
 雙向綁定 - v-model
-資料傳遞 - props 和 emit.md
+資料傳遞 - props 和 emit
+條件渲染 - v-if 和 v-show
+動態切換元件 - component
+迭代渲染 - v-for
+監聽器 - watch
+生命週期函數
+插槽 - slot
+Pinia - 全域資料管理
