@@ -72,6 +72,27 @@ const router = createRouter({
             },
           ]
         },
+        {
+          path: "PropsAndEmit",
+          name: "資料傳遞",
+          children: [
+            {
+              path: "child",
+              name: "嵌套元件",
+              component: () => import('@/pages/VueDemo/PropsAndEmit/child/index.vue')
+            },
+            {
+              path: "props",
+              name: "props - 資料傳遞 (父傳子)",
+              component: () => import('@/pages/VueDemo/PropsAndEmit/props/index.vue')
+            },
+            {
+              path: "emit",
+              name: "emit - 資料傳遞 (子傳父)",
+              component: () => import('@/pages/VueDemo/PropsAndEmit/emit/index.vue')
+            },
+          ]
+        },
       ]
     },
   ],
