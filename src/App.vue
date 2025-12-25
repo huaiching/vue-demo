@@ -2,8 +2,9 @@
 import { RouterView, useRoute } from 'vue-router'
 import { ref } from 'vue'
 import router from './router'
-import MenuItem from './Menu/MenuItem.vue'
 import { Fold, Expand, Moon, Sunny } from '@element-plus/icons-vue'
+import { useDark, useToggle } from '@vueuse/core'
+import MenuItem from './common/Menu/MenuItem.vue'
 
 
 const route = useRoute()
@@ -17,7 +18,6 @@ const routesList = router.options.routes.filter(route => {
 })
 
 // 黑暗模式切換（使用 VueUse）
-import { useDark, useToggle } from '@vueuse/core'
 const isDark = useDark({
   valueDark: 'dark',
   valueLight: 'light',

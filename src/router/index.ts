@@ -32,22 +32,43 @@ const router = createRouter({
       children: [
         {
           path: "ReactiveData",
-          name: "響應式頁面",
+          name: "響應式資料",
           children: [
             {
               path: "Ref",
               name: "ref - 基本響應式數據",
-              component: () => import('@/pages/VueDemo/ReactiveData/Ref/index.vue')
+              component: () => import('@/pages/VueDemo/ReactiveData/ref/index.vue')
             },
             {
               path: "Reactive",
               name: "Reactive - 響應式對象",
-              component: () => import('@/pages/VueDemo/ReactiveData/Reactive/index.vue')
+              component: () => import('@/pages/VueDemo/ReactiveData/reactive/index.vue')
             },
             {
               path: "Computed",
               name: "Computed - 計算屬性",
-              component: () => import('@/pages/VueDemo/ReactiveData/Computed/index.vue')
+              component: () => import('@/pages/VueDemo/ReactiveData/computed/index.vue')
+            },
+          ]
+        },
+        {
+          path: "BindAanEvent",
+          name: "資料綁定與事件處理",
+          children: [
+            {
+              path: "v-bind",
+              name: "v-bind - 屬性綁定",
+              component: () => import('@/pages/VueDemo/BindAanEvent/v-bind/index.vue')
+            },
+            {
+              path: "v-on",
+              name: "v-on - 事件處理",
+              component: () => import('@/pages/VueDemo/BindAanEvent/v-on/index.vue')
+            },
+            {
+              path: "v-model",
+              name: "v-model - 雙向綁定",
+              component: () => import('@/pages/VueDemo/BindAanEvent/v-model/index.vue')
             },
           ]
         },

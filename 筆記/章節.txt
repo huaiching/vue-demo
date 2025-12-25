@@ -2,3 +2,6 @@
 資料結構與相關元件
 vue的頁面結構
 響應式數據 - ref、reactive 和 computed
+屬性綁定 - v-bind
+事件處理 - v-on
+雙向綁定 - v-model

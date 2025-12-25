@@ -1,3 +1,6 @@
+/**
+ * 側邊選單的選單項目生成
+ */
 <script setup>
 import { computed } from 'vue'
 
