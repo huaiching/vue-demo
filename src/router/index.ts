@@ -109,6 +109,11 @@ const router = createRouter({
             },
           ]
         },
+        {
+          path: "Component",
+          name: "動態切換元件",
+          component: () => import('@/pages/VueDemo/Component/index.vue')
+        },
       ]
     },
   ],
