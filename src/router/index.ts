@@ -119,6 +119,11 @@ const router = createRouter({
           name: "迭代渲染",
           component: () => import('@/pages/VueDemo/For/index.vue')
         },
+        {
+          path: "Watch",
+          name: "監聽器",
+          component: () => import('@/pages/VueDemo/Watch/index.vue')
+        },
       ]
     },
   ],
