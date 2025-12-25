@@ -140,6 +140,11 @@ const router = createRouter({
             },
           ]
         },
+        {
+          path: "LifeCycle",
+          name: "生命週期函數",
+          component: () => import('@/pages/VueDemo/LifeCycle/index.vue')
+        },
       ]
     },
   ],
