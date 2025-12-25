@@ -17,7 +17,7 @@
 
 ## 語法
 
-- 語法結構
+### 語法結構
   ```ts
   watch(source, callback, options?)
   ```
@@ -31,9 +31,7 @@
     - `deep` : 深度監聽（對物件內部屬性變化也觸發）
       - true / false(預設)
 
-
-
-- 應用方式
+### 使用方式
 
 ```ts
 <script setup lang="ts">

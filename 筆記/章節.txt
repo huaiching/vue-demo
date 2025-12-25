@@ -10,6 +10,6 @@ vue的頁面結構
 動態切換元件 - component
 迭代渲染 - v-for
 監聽器 - watch
-生命週期函數
 插槽 - slot
+生命週期函數
 Pinia - 全域資料管理

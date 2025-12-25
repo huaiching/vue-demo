@@ -124,6 +124,22 @@ const router = createRouter({
           name: "監聽器",
           component: () => import('@/pages/VueDemo/Watch/index.vue')
         },
+        {
+          path: "Slot",
+          name: "插槽",
+          children: [
+            {
+              path: "Simple",
+              name: "簡單插槽",
+              component: () => import('@/pages/VueDemo/Slot/Simple/index.vue')
+            },
+            {
+              path: "Complex",
+              name: "具名插槽",
+              component: () => import('@/pages/VueDemo/Slot/Complex/index.vue')
+            },
+          ]
+        },
       ]
     },
   ],
