@@ -8,6 +8,7 @@
 
 - 可擺放 `任何型態` 的資料
 - 數值 會放在 `value` 屬性中
+- 監聽器 (watch) 無法監聽內部屬性
 
 ### 語法
 
@@ -100,15 +101,7 @@ const add = () => {
 </template>>
 ```
 
-## 3. ref 與 reactive 的比較
-
-- 使用 `reactive` 的時機
-  - 資料型態 為 `物件 {}` 或 `陣列[]`
-- 使用 `ref` 的時機
-  - 資料型態 為 `String`、`Number`、`Boolean` 等基本屬性
-  - 變數 `無監聽需求`
-
-## 4. computed - 計算屬性
+## 3. computed - 計算屬性
 
 ### 特性
 

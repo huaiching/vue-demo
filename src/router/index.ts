@@ -145,6 +145,11 @@ const router = createRouter({
           name: "生命週期函數",
           component: () => import('@/pages/VueDemo/LifeCycle/index.vue')
         },
+        {
+          path: "Pinia",
+          name: "Pinia - 全域資料管理",
+          component: () => import('@/pages/VueDemo/PiniaDemo/index.vue')
+        },
       ]
     },
   ],

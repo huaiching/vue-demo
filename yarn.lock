@@ -601,11 +601,6 @@
   dependencies:
     undici-types "~7.16.0"
 
-"@types/sortablejs@^1.15.8":
-  version "1.15.9"
-  resolved "https://registry.yarnpkg.com/@types/sortablejs/-/sortablejs-1.15.9.tgz#82d2337f54d4db827914d80dee5cf65539ae3c8b"
-  integrity sha512-7HP+rZGE2p886PKV9c9OJzLBI6BBJu1O7lJGYnPyG3fS4/duUCcngkNCjsLwIMV+WMqANe3tt4irrXHSIe68OQ==
-
 "@types/web-bluetooth@^0.0.20":
   version "0.0.20"
   resolved "https://registry.yarnpkg.com/@types/web-bluetooth/-/web-bluetooth-0.0.20.tgz#f066abfcd1cbe66267cdbbf0de010d8a41b41597"
@@ -1012,6 +1007,13 @@ electron-to-chromium@^1.5.263:
   version "1.5.267"
   resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.267.tgz#5d84f2df8cdb6bfe7e873706bb21bd4bfb574dc7"
   integrity sha512-0Drusm6MVRXSOJpGbaSVgcQsuB4hEkMpHXaVstcPmhu5LIedxs1xNK/nIxmQIU/RPC0+1/o0AVZfBTkTNJOdUw==
+
+element-plus-table-dragable@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/element-plus-table-dragable/-/element-plus-table-dragable-1.0.0.tgz#2a97fa2d80509484ed5d78f813e564b913497d12"
+  integrity sha512-NKa95z3wkKv8l4iydQksJh+uGYtbI3ixiUio6tZzmY9XyJZDtgzWHx6kpqRzCWoba7EUoaIhA+Se/QKWKeOhTA==
+  dependencies:
+    sortablejs "^1.15.0"
 
 element-plus@^2.13.0:
   version "2.13.0"
@@ -1497,6 +1499,11 @@ sirv@^3.0.1, sirv@^3.0.2:
     mrmime "^2.0.0"
     totalist "^3.0.0"
 
+sortablejs@^1.15.0:
+  version "1.15.6"
+  resolved "https://registry.yarnpkg.com/sortablejs/-/sortablejs-1.15.6.tgz#ff93699493f5b8ab8d828f933227b4988df1d393"
+  integrity sha512-aNfiuwMEpfBM/CN6LY0ibyhxPfPbyFeBTYJKCvzkJ2GkUpazIt3H+QIPAMHwqQ7tMKaHz1Qj+rJJCqljnf4p3A==
+
 source-map-js@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/source-map-js/-/source-map-js-1.2.1.tgz#1ce5650fddd87abc099eda37dcff024c2667ae46"
@@ -1718,13 +1725,6 @@ vue-demi@>=0.14.8:
   version "0.14.10"
   resolved "https://registry.yarnpkg.com/vue-demi/-/vue-demi-0.14.10.tgz#afc78de3d6f9e11bf78c55e8510ee12814522f04"
   integrity sha512-nMZBOwuzabUO0nLgIcc6rycZEebF6eeUfaiQx9+WSk8e29IbLvPU9feI6tqW4kTo3hvoYAJkMh8n8D0fuISphg==
-
-vue-draggable-plus@^0.6.0:
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/vue-draggable-plus/-/vue-draggable-plus-0.6.0.tgz#e4da6917e94ca73402f34113073f44771691fa5e"
-  integrity sha512-G5TSfHrt9tX9EjdG49InoFJbt2NYk0h3kgjgKxkFWr3ulIUays0oFObr5KZ8qzD4+QnhtALiRwIqY6qul4egqw==
-  dependencies:
-    "@types/sortablejs" "^1.15.8"
 
 vue-router@^4.6.3:
   version "4.6.4"
