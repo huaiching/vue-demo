@@ -11,15 +11,19 @@ const router = createRouter({
       path: "/home",
       name: "首頁",
       component: () => import('@/pages/Home/index.vue'),
-      meta: { icon: 'House' }
+      meta: { 
+        icon: 'House'
+      }
     },
     {
       path: "/demo",
       name: "測試",
-      meta: { icon: 'Location' },
+      meta: { 
+        icon: 'Location'
+      },
       children: [
         {
-          path: "demo",
+          path: "page",
           name: "測試頁面",
           component: () => import('@/pages/Demo/index.vue')
         },
@@ -150,9 +154,29 @@ const router = createRouter({
           name: "Pinia - 全域資料管理",
           component: () => import('@/pages/VueDemo/PiniaDemo/index.vue')
         },
+        {
+          path: "RouterPath",
+          name: "Router - 路由跳轉",
+          component: () => import('@/pages/VueDemo/RouterPath/index.vue')
+        },
+        {
+          path: "RouterPath/router",
+          component: () => import('@/pages/VueDemo/RouterPath/Components/Router.vue')
+        },
+        {
+          path: "RouterPath/window",
+          component: () => import('@/pages/VueDemo/RouterPath/Components/Window.vue')
+        },
       ]
     },
   ],
 })
+
+router.beforeEach((to, from) => {
+  console.log('路由守衛 - beforeEach')
+  console.log('to:', to.path)
+  console.log('from:', from.path)
+})
+
 
 export default router

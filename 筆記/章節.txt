@@ -13,4 +13,4 @@ vue的頁面結構
 插槽 - slot
 生命週期函數
 Pinia - 全域資料管理
-Vue-Router - vue的官方路由
+vue-Router - 路由管理

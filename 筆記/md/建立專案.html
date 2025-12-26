@@ -47,14 +47,14 @@
 │  ● Yes / ○ No
 </span></code></pre><h2 id="2-安裝-依賴套件">2. 安裝 依賴套件 </h2>
 <p>進入 專案資料夾 透過 <code>CMD</code> 執行</p>
-<pre data-role="codeBlock" data-info="textile" class="language-textile textile"><code><span class="token phrase">yarn add element-plus dayjs taiwan-id-validator xlsx vue-draggable-plus
+<pre data-role="codeBlock" data-info="textile" class="language-textile textile"><code><span class="token phrase">yarn add element-plus dayjs taiwan-id-validator xlsx element-plus-table-dragable
 yarn add -D @element-plus/icons-vue unplugin-auto-import unplugin-vue-components
 </span></code></pre><ul>
 <li>element-plus：UI 框架</li>
 <li>dayjs：日期處理</li>
 <li>taiwan-id-validator：台灣身分證/統一編號驗證</li>
 <li>xlsx：Excel 檔案處理（SheetJS）</li>
-<li>vue-draggable-plus : 拖曳組件</li>
+<li>element-plus-table-dragable : 拖曳組件</li>
 <li>@element-plus/icons-vue：Element Plus 的圖示庫</li>
 <li>unplugin-auto-import + unplugin-vue-components：自動按需引入 Element Plus 組件與 API（推薦，減少 bundle 大小）</li>
 </ul>
@@ -338,7 +338,7 @@ app<span class="token punctuation">.</span>config<span class="token punctuation"
       meta<span class="token operator">:</span> <span class="token punctuation">{</span> icon<span class="token operator">:</span> <span class="token string">'Location'</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
       children<span class="token operator">:</span> <span class="token punctuation">[</span>
         <span class="token punctuation">{</span>
-          path<span class="token operator">:</span> <span class="token string">"demo"</span><span class="token punctuation">,</span>
+          path<span class="token operator">:</span> <span class="token string">"page"</span><span class="token punctuation">,</span>
           name<span class="token operator">:</span> <span class="token string">"測試頁面"</span><span class="token punctuation">,</span>
           <span class="token function-variable function">component</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token keyword keyword-import">import</span><span class="token punctuation">(</span><span class="token string">'@/pages/Demo/index.vue'</span><span class="token punctuation">)</span>
         <span class="token punctuation">}</span><span class="token punctuation">,</span>
