@@ -3,6 +3,7 @@ import MliBreadcrumb from '@/common/Field/MliBreadcrumb.vue';
 import { ref } from 'vue';
 const value1 = ref('')
 const value2 = ref('')
+const value3 = ref('')
 </script>
 
 <template>
@@ -13,5 +14,10 @@ const value2 = ref('')
   </div>
   <div>
     <el-date-picker v-model="value2" type="month" placeholder="輸入日期" format="TTT/MM" />
+  </div>
+  <div>
+
+    <el-date-picker v-model="value3" type="daterange" range-separator="To" start-placeholder="輸入起日"
+      end-placeholder="輸入契日" format="TTT/MM/DD" />
   </div>
 </template>

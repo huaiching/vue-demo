@@ -75,8 +75,7 @@ const minguoEraParse = (option: any, dayjsClass: any) => {
     if (format === 'TTT/MM') {
       digitsOnly = digitsOnly + '01'
     }
-    console.log('format',format)
-    console.log('digitsOnly',digitsOnly)
+    
     // 處理西元年輸入
     if (digitsOnly.length === 8) {
       const year = parseInt(digitsOnly.slice(0, 4), 10) - 1911
@@ -107,10 +106,6 @@ const minguoEraParse = (option: any, dayjsClass: any) => {
         dayStr = digitsOnly.slice(5, 7)
       }
 
-      const minguoYear = parseInt(minguoYearStr, 10)
-      const month = parseInt(monthStr, 10)
-      const day = dayStr ? parseInt(dayStr, 10) : 1  // 年月格式無日時預設為1日
-
       // ========================
       // Step 3: 嚴格日期校驗（使用外部 isValidDate 工具）
       // ========================
@@ -118,7 +113,7 @@ const minguoEraParse = (option: any, dayjsClass: any) => {
 
       if (isValidDate(fullMinguoDateStr)) {
         // 日期合法 → 轉換為西元年格式供 Day.js 解析
-        const gregorianYear = minguoYear + YEAR_BIAS
+        const gregorianYear = parseInt(minguoYearStr, 10) + YEAR_BIAS
 
         let gregorianFormatted: string
         let newFormat: string
