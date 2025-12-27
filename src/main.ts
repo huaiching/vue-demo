@@ -9,7 +9,7 @@ import ElementPlus from 'element-plus'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import dayjs from 'dayjs'
 import zhTw from 'element-plus/es/locale/lang/zh-tw'
-import { setupMinguoDayjs } from './common/Plougins/MinguoDayjs'
+import { setupMinguoDayjs } from './common/Dayjs/MinguoDayjs'
 setupMinguoDayjs()
 
 const app = createApp(App)

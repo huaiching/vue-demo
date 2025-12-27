@@ -98,7 +98,231 @@ yarn add -D @element-plus/icons-vue unplugin-auto-import unplugin-vue-components
   <span class="token keyword keyword-const">const</span> component<span class="token operator">:</span> DefineComponent<span class="token operator">&lt;</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token builtin">any</span><span class="token operator">&gt;</span>
   <span class="token keyword keyword-export">export</span> <span class="token keyword keyword-default">default</span> component
 <span class="token punctuation">}</span>
-</code></pre><h2 id="5-調整-maints">5. 調整 main.ts </h2>
+</code></pre><h2 id="5-新增-element-plus-的-民國年日期套件">5. 新增 element plus 的 民國年日期套件 </h2>
+<p>於 <code>src/common/Dayjs</code> 新增檔案 <code>MinguoDayjs.ts</code></p>
+<pre data-role="codeBlock" data-info="ts" class="language-ts ts"><code><span class="token doc-comment comment">/**
+ * 民國年支援套件（Vue 3 + Element Plus + Day.js）
+ *
+ * 主要特色：
+ * 1. 輸入框顯示民國年格式：TTT/MM/DD → 114/12/27
+ * 2. 手動輸入支援多種格式：114/12/27、1141227、1140101、14-01-01、140101 等
+ * 3. 選擇器面板標頭顯示「114 年 12 月」
+ * 4. 年份選擇面板顯示民國年：109 ~ 118
+ * 5. v-model 綁定值仍為標準西元年字串（YYYY-MM-DD）
+ */</span>
+
+<span class="token keyword keyword-import">import</span> dayjs <span class="token keyword keyword-from">from</span> <span class="token string">'dayjs'</span>
+<span class="token keyword keyword-import">import</span> <span class="token string">'dayjs/locale/zh-tw'</span>
+<span class="token keyword keyword-import">import</span> customParseFormat <span class="token keyword keyword-from">from</span> <span class="token string">'dayjs/plugin/customParseFormat'</span>
+<span class="token keyword keyword-import">import</span> <span class="token punctuation">{</span> ElMessage <span class="token punctuation">}</span> <span class="token keyword keyword-from">from</span> <span class="token string">'element-plus'</span>
+
+<span class="token keyword keyword-const">const</span> <span class="token constant">YEAR_BIAS</span> <span class="token operator">=</span> <span class="token number">1911</span>  <span class="token comment">// 民國紀年與西元紀年的差值（1911）</span>
+
+<span class="token comment">// ========================================</span>
+<span class="token comment">// 1. 顯示插件：負責將 TTT 轉換為民國年顯示</span>
+<span class="token comment">// ========================================</span>
+<span class="token keyword keyword-const">const</span> <span class="token function-variable function">minguoEra</span> <span class="token operator">=</span> <span class="token punctuation">(</span>_o<span class="token operator">:</span> <span class="token builtin">any</span><span class="token punctuation">,</span> c<span class="token operator">:</span> <span class="token builtin">any</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+  <span class="token keyword keyword-const">const</span> prototype <span class="token operator">=</span> c<span class="token punctuation">.</span>prototype
+  <span class="token keyword keyword-const">const</span> oldFormat <span class="token operator">=</span> prototype<span class="token punctuation">.</span>format  <span class="token comment">// 保存原始 format 方法</span>
+
+  <span class="token comment">// 覆寫 Day.js 的 format 方法</span>
+  prototype<span class="token punctuation">.</span><span class="token function-variable function">format</span> <span class="token operator">=</span> <span class="token keyword keyword-function">function</span> <span class="token punctuation">(</span>formatStr<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 將 format 中的 TTT 替換為實際民國年（三位補零）</span>
+    <span class="token keyword keyword-const">const</span> result <span class="token operator">=</span> formatStr<span class="token punctuation">.</span><span class="token function">replace</span><span class="token punctuation">(</span><span class="token regex"><span class="token regex-delimiter">/</span><span class="token regex-source language-regex">(\[[^\]]+\])|TTT</span><span class="token regex-delimiter">/</span><span class="token regex-flags">g</span></span><span class="token punctuation">,</span> <span class="token punctuation">(</span>match<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">,</span> bracket<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+      <span class="token keyword keyword-if">if</span> <span class="token punctuation">(</span>bracket<span class="token punctuation">)</span> <span class="token keyword keyword-return">return</span> bracket  <span class="token comment">// 保留 [文字] 不變</span>
+      <span class="token keyword keyword-const">const</span> minguoYear <span class="token operator">=</span> <span class="token keyword keyword-this">this</span><span class="token punctuation">.</span>$y <span class="token operator">-</span> <span class="token constant">YEAR_BIAS</span>  <span class="token comment">// this.$y 是 Day.js 內部儲存的西元年</span>
+      <span class="token keyword keyword-return">return</span> <span class="token function">String</span><span class="token punctuation">(</span>minguoYear<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">padStart</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">,</span> <span class="token string">'0'</span><span class="token punctuation">)</span>  <span class="token comment">// 補零至三位：114、015、005</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span>
+    <span class="token comment">// 其餘格式交給原始 format 處理</span>
+    <span class="token keyword keyword-return">return</span> <span class="token function">oldFormat</span><span class="token punctuation">.</span><span class="token function">call</span><span class="token punctuation">(</span><span class="token keyword keyword-this">this</span><span class="token punctuation">,</span> result<span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// ========================================</span>
+<span class="token comment">// 2. 解析插件：負責將使用者輸入的民國年轉換為 Day.js 可理解的西元年格式</span>
+<span class="token comment">//    支援：有分隔符、無分隔符、西元年輸入，並加入嚴格日期校驗</span>
+<span class="token comment">// ========================================</span>
+<span class="token keyword keyword-const">const</span> <span class="token function-variable function">minguoEraParse</span> <span class="token operator">=</span> <span class="token punctuation">(</span>_o<span class="token operator">:</span> <span class="token builtin">any</span><span class="token punctuation">,</span> c<span class="token operator">:</span> <span class="token builtin">any</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+  <span class="token keyword keyword-const">const</span> prototype <span class="token operator">=</span> c<span class="token punctuation">.</span>prototype
+  <span class="token keyword keyword-const">const</span> oldParse <span class="token operator">=</span> prototype<span class="token punctuation">.</span>parse  <span class="token comment">// 保存原始 parse 方法</span>
+
+  prototype<span class="token punctuation">.</span><span class="token function-variable function">parse</span> <span class="token operator">=</span> <span class="token keyword keyword-function">function</span> <span class="token punctuation">(</span>cfg<span class="token operator">:</span> <span class="token builtin">any</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword keyword-let">let</span> <span class="token punctuation">{</span> date<span class="token punctuation">,</span> args <span class="token punctuation">}</span> <span class="token operator">=</span> cfg
+
+    <span class="token comment">// 基本驗證：無輸入或無格式時直接使用原生解析</span>
+    <span class="token keyword keyword-if">if</span> <span class="token punctuation">(</span>
+      <span class="token operator">!</span>date <span class="token operator">||</span>
+      <span class="token keyword keyword-typeof">typeof</span> date <span class="token operator">!==</span> <span class="token string">'string'</span> <span class="token operator">||</span>
+      <span class="token operator">!</span>args <span class="token operator">||</span>
+      <span class="token operator">!</span>args<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span>
+    <span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword keyword-return">return</span> <span class="token function">oldParse</span><span class="token punctuation">.</span><span class="token function">call</span><span class="token punctuation">(</span><span class="token keyword keyword-this">this</span><span class="token punctuation">,</span> cfg<span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword keyword-const">const</span> format<span class="token operator">:</span> <span class="token builtin">string</span> <span class="token operator">=</span> args<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">trim</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+    <span class="token comment">// 只處理包含 TTT 的民國年格式，其他格式不干擾</span>
+    <span class="token keyword keyword-if">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>format<span class="token punctuation">.</span><span class="token function">includes</span><span class="token punctuation">(</span><span class="token string">'T'</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword keyword-return">return</span> <span class="token function">oldParse</span><span class="token punctuation">.</span><span class="token function">call</span><span class="token punctuation">(</span><span class="token keyword keyword-this">this</span><span class="token punctuation">,</span> cfg<span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword keyword-let">let</span> inputDate <span class="token operator">=</span> date<span class="token punctuation">.</span><span class="token function">trim</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+    <span class="token comment">// ========================</span>
+    <span class="token comment">// Step 1: 處理各種輸入格式，統一轉為純數字字串（方便後續處理）</span>
+    <span class="token comment">// ========================</span>
+    <span class="token keyword keyword-let">let</span> digitsOnly <span class="token operator">=</span> inputDate<span class="token punctuation">.</span><span class="token function">replace</span><span class="token punctuation">(</span><span class="token regex"><span class="token regex-delimiter">/</span><span class="token regex-source language-regex">\D</span><span class="token regex-delimiter">/</span><span class="token regex-flags">g</span></span><span class="token punctuation">,</span> <span class="token string">''</span><span class="token punctuation">)</span>  <span class="token comment">// 移除所有非數字</span>
+
+    <span class="token comment">// 處理西元年輸入（如 20250101 → 轉為民國格式 1140101）</span>
+    <span class="token keyword keyword-if">if</span> <span class="token punctuation">(</span>format <span class="token operator">===</span> <span class="token string">'TTT/MM/DD'</span> <span class="token operator">&amp;&amp;</span> digitsOnly<span class="token punctuation">.</span>length <span class="token operator">===</span> <span class="token number">8</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword keyword-const">const</span> year <span class="token operator">=</span> <span class="token function">parseInt</span><span class="token punctuation">(</span>inputDate<span class="token punctuation">.</span><span class="token function">slice</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">)</span> <span class="token operator">-</span> <span class="token number">1911</span>
+      <span class="token keyword keyword-const">const</span> month <span class="token operator">=</span> <span class="token function">parseInt</span><span class="token punctuation">(</span>inputDate<span class="token punctuation">.</span><span class="token function">slice</span><span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">)</span>
+      <span class="token keyword keyword-const">const</span> day <span class="token operator">=</span> <span class="token function">parseInt</span><span class="token punctuation">(</span>inputDate<span class="token punctuation">.</span><span class="token function">slice</span><span class="token punctuation">(</span><span class="token number">6</span><span class="token punctuation">,</span> <span class="token number">8</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">)</span>
+      digitsOnly <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token function">String</span><span class="token punctuation">(</span>year<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">padStart</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">,</span> <span class="token string">'0'</span><span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token function">String</span><span class="token punctuation">(</span>month<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">padStart</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token string">'0'</span><span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token function">String</span><span class="token punctuation">(</span>day<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">padStart</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token string">'0'</span><span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span>
+    <span class="token punctuation">}</span>
+
+    <span class="token comment">// 處理西元年輸入 + 年月格式補日為 01（如輸入 202501 → 轉為 1140101）</span>
+    <span class="token keyword keyword-if">if</span> <span class="token punctuation">(</span>format <span class="token operator">===</span> <span class="token string">'TTT/MM'</span> <span class="token operator">&amp;&amp;</span> digitsOnly<span class="token punctuation">.</span>length <span class="token operator">===</span> <span class="token number">6</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword keyword-const">const</span> year <span class="token operator">=</span> <span class="token function">parseInt</span><span class="token punctuation">(</span>inputDate<span class="token punctuation">.</span><span class="token function">slice</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">)</span> <span class="token operator">-</span> <span class="token number">1911</span>
+      <span class="token keyword keyword-const">const</span> month <span class="token operator">=</span> <span class="token function">parseInt</span><span class="token punctuation">(</span>inputDate<span class="token punctuation">.</span><span class="token function">slice</span><span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">)</span>
+      digitsOnly <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token function">String</span><span class="token punctuation">(</span>year<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">padStart</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">,</span> <span class="token string">'0'</span><span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token function">String</span><span class="token punctuation">(</span>month<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">padStart</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token string">'0'</span><span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">01</span><span class="token template-punctuation string">`</span></span>
+    <span class="token punctuation">}</span>
+
+    <span class="token comment">// ========================</span>
+    <span class="token comment">// Step 2: 處理無分隔符純數字輸入（台灣最常見用法）</span>
+    <span class="token comment">//    6碼：民國2位年（如 140101 → 民國14年）</span>
+    <span class="token comment">//    7碼：民國3位年（如 1140101 → 民國114年）</span>
+    <span class="token comment">// ========================</span>
+    <span class="token keyword keyword-if">if</span> <span class="token punctuation">(</span>digitsOnly<span class="token punctuation">.</span>length <span class="token operator">===</span> <span class="token number">6</span> <span class="token operator">||</span> digitsOnly<span class="token punctuation">.</span>length <span class="token operator">===</span> <span class="token number">7</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword keyword-let">let</span> minguoYearStr<span class="token operator">:</span> <span class="token builtin">string</span>
+      <span class="token keyword keyword-let">let</span> monthStr<span class="token operator">:</span> <span class="token builtin">string</span>
+      <span class="token keyword keyword-let">let</span> dayStr<span class="token operator">:</span> <span class="token builtin">string</span> <span class="token operator">=</span> <span class="token string">''</span>
+
+      <span class="token keyword keyword-if">if</span> <span class="token punctuation">(</span>digitsOnly<span class="token punctuation">.</span>length <span class="token operator">===</span> <span class="token number">6</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment">// 6碼：年2碼 + 月2碼 + 日2碼</span>
+        minguoYearStr <span class="token operator">=</span> digitsOnly<span class="token punctuation">.</span><span class="token function">slice</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">padStart</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">,</span> <span class="token string">'0'</span><span class="token punctuation">)</span>  <span class="token comment">// "14" → "014"</span>
+        monthStr <span class="token operator">=</span> digitsOnly<span class="token punctuation">.</span><span class="token function">slice</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">)</span>
+        dayStr <span class="token operator">=</span> digitsOnly<span class="token punctuation">.</span><span class="token function">slice</span><span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">)</span>
+      <span class="token punctuation">}</span> <span class="token keyword keyword-else">else</span> <span class="token punctuation">{</span>
+        <span class="token comment">// 7碼：年3碼 + 月2碼 + 日2碼</span>
+        minguoYearStr <span class="token operator">=</span> digitsOnly<span class="token punctuation">.</span><span class="token function">slice</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span>
+        monthStr <span class="token operator">=</span> digitsOnly<span class="token punctuation">.</span><span class="token function">slice</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">)</span>
+        dayStr <span class="token operator">=</span> digitsOnly<span class="token punctuation">.</span><span class="token function">slice</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">)</span>
+      <span class="token punctuation">}</span>
+
+      <span class="token keyword keyword-const">const</span> minguoYear <span class="token operator">=</span> <span class="token function">parseInt</span><span class="token punctuation">(</span>minguoYearStr<span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">)</span>
+      <span class="token keyword keyword-const">const</span> month <span class="token operator">=</span> <span class="token function">parseInt</span><span class="token punctuation">(</span>monthStr<span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">)</span>
+      <span class="token keyword keyword-const">const</span> day <span class="token operator">=</span> dayStr <span class="token operator">?</span> <span class="token function">parseInt</span><span class="token punctuation">(</span>dayStr<span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">)</span> <span class="token operator">:</span> <span class="token number">1</span>  <span class="token comment">// 年月格式無日時預設為1日</span>
+
+      <span class="token comment">// ========================</span>
+      <span class="token comment">// Step 3: 嚴格日期校驗（使用外部 isValidDate 工具）</span>
+      <span class="token comment">// ========================</span>
+      <span class="token keyword keyword-const">const</span> fullMinguoDateStr <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>minguoYearStr<span class="token punctuation">.</span><span class="token function">padStart</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">,</span> <span class="token string">'0'</span><span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>monthStr<span class="token punctuation">.</span><span class="token function">padStart</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token string">'0'</span><span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>dayStr<span class="token punctuation">.</span><span class="token function">padStart</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token string">'0'</span><span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span>
+
+      <span class="token keyword keyword-if">if</span> <span class="token punctuation">(</span><span class="token function">isValidDate</span><span class="token punctuation">(</span>fullMinguoDateStr<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment">// 日期合法 → 轉換為西元年格式供 Day.js 解析</span>
+        <span class="token keyword keyword-const">const</span> gregorianYear <span class="token operator">=</span> minguoYear <span class="token operator">+</span> <span class="token constant">YEAR_BIAS</span>
+
+        <span class="token keyword keyword-let">let</span> gregorianFormatted<span class="token operator">:</span> <span class="token builtin">string</span>
+        <span class="token keyword keyword-let">let</span> newFormat<span class="token operator">:</span> <span class="token builtin">string</span>
+
+        <span class="token keyword keyword-if">if</span> <span class="token punctuation">(</span>format<span class="token punctuation">.</span><span class="token function">includes</span><span class="token punctuation">(</span><span class="token string">'DD'</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          gregorianFormatted <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>gregorianYear<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">/</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>monthStr<span class="token punctuation">.</span><span class="token function">padStart</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token string">'0'</span><span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">/</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>dayStr<span class="token punctuation">.</span><span class="token function">padStart</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token string">'0'</span><span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span>
+          newFormat <span class="token operator">=</span> <span class="token string">'YYYY/MM/DD'</span>
+        <span class="token punctuation">}</span> <span class="token keyword keyword-else">else</span> <span class="token punctuation">{</span>
+          gregorianFormatted <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>gregorianYear<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">/</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>monthStr<span class="token punctuation">.</span><span class="token function">padStart</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token string">'0'</span><span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span>
+          newFormat <span class="token operator">=</span> <span class="token string">'YYYY/MM'</span>
+        <span class="token punctuation">}</span>
+
+        <span class="token keyword keyword-return">return</span> <span class="token function">oldParse</span><span class="token punctuation">.</span><span class="token function">call</span><span class="token punctuation">(</span><span class="token keyword keyword-this">this</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+          <span class="token operator">...</span>cfg<span class="token punctuation">,</span>
+          date<span class="token operator">:</span> gregorianFormatted<span class="token punctuation">,</span>
+          args<span class="token operator">:</span> <span class="token punctuation">[</span>gregorianFormatted<span class="token punctuation">,</span> newFormat<span class="token punctuation">]</span><span class="token punctuation">,</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span>
+      <span class="token punctuation">}</span> <span class="token keyword keyword-else">else</span> <span class="token punctuation">{</span>
+        <span class="token comment">// 日期無效（如 114/01/50、114/02/30）</span>
+        <span class="token comment">// 顯示錯誤訊息，並讓 Element Plus 顯示紅框</span>
+        <span class="token keyword keyword-let">let</span> newFormat<span class="token operator">:</span> <span class="token builtin">string</span> <span class="token operator">=</span> format<span class="token punctuation">.</span><span class="token function">includes</span><span class="token punctuation">(</span><span class="token string">'DD'</span><span class="token punctuation">)</span> <span class="token operator">?</span> <span class="token string">'YYYY/MM/DD'</span> <span class="token operator">:</span> <span class="token string">'YYYY/MM'</span>
+        ElMessage<span class="token punctuation">.</span><span class="token function">error</span><span class="token punctuation">(</span><span class="token string">'日期格式錯誤，請輸入正確的民國或西元年月日'</span><span class="token punctuation">)</span>
+
+        <span class="token keyword keyword-return">return</span> <span class="token function">oldParse</span><span class="token punctuation">.</span><span class="token function">call</span><span class="token punctuation">(</span><span class="token keyword keyword-this">this</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+          <span class="token operator">...</span>cfg<span class="token punctuation">,</span>
+          date<span class="token operator">:</span> <span class="token keyword keyword-null">null</span><span class="token punctuation">,</span>  <span class="token comment">// 強制無效，讓元件顯示錯誤狀態</span>
+          args<span class="token operator">:</span> <span class="token punctuation">[</span><span class="token keyword keyword-null">null</span><span class="token punctuation">,</span> newFormat<span class="token punctuation">]</span><span class="token punctuation">,</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// ========================================</span>
+<span class="token comment">// 3. 覆寫 year() 方法：讓面板標頭與年份選擇器顯示民國年</span>
+<span class="token comment">// ========================================</span>
+<span class="token keyword keyword-const">const</span> <span class="token function-variable function">overrideYearMethod</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+  <span class="token keyword keyword-const">const</span> originalYear <span class="token operator">=</span> dayjs<span class="token punctuation">.</span>prototype<span class="token punctuation">.</span>year
+
+  dayjs<span class="token punctuation">.</span>prototype<span class="token punctuation">.</span><span class="token function-variable function">year</span> <span class="token operator">=</span> <span class="token keyword keyword-function">function</span> <span class="token punctuation">(</span>setter<span class="token operator">?</span><span class="token operator">:</span> <span class="token builtin">number</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword keyword-if">if</span> <span class="token punctuation">(</span><span class="token keyword keyword-typeof">typeof</span> setter <span class="token operator">===</span> <span class="token string">'number'</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment">// 設定年份時：傳入民國年 → 轉西元儲存</span>
+      <span class="token keyword keyword-return">return</span> <span class="token function">originalYear</span><span class="token punctuation">.</span><span class="token function">call</span><span class="token punctuation">(</span><span class="token keyword keyword-this">this</span><span class="token punctuation">,</span> setter <span class="token operator">+</span> <span class="token constant">YEAR_BIAS</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+    <span class="token comment">// 取年份時：返回民國年</span>
+    <span class="token keyword keyword-return">return</span> <span class="token function">originalYear</span><span class="token punctuation">.</span><span class="token function">call</span><span class="token punctuation">(</span><span class="token keyword keyword-this">this</span><span class="token punctuation">)</span> <span class="token operator">-</span> <span class="token constant">YEAR_BIAS</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token doc-comment comment">/**
+ * 檢查傳入的年月日是否為合法日期
+ * <span class="token keyword keyword-@param">@param</span> <span class="token parameter">date</span> 純數字字串（民國7位 或 西元8位）
+ * <span class="token keyword keyword-@returns">@returns</span> boolean
+ */</span>
+<span class="token keyword keyword-export">export</span> <span class="token keyword keyword-const">const</span> isValidDate <span class="token operator">=</span> <span class="token punctuation">(</span>date<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">)</span><span class="token operator">:</span> <span class="token builtin">boolean</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+  <span class="token keyword keyword-let">let</span> year <span class="token operator">=</span> <span class="token number">0</span>
+  <span class="token keyword keyword-let">let</span> month <span class="token operator">=</span> <span class="token number">0</span>
+  <span class="token keyword keyword-let">let</span> day <span class="token operator">=</span> <span class="token number">0</span>
+
+  <span class="token keyword keyword-if">if</span> <span class="token punctuation">(</span>date<span class="token punctuation">.</span>length <span class="token operator">===</span> <span class="token number">8</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 西元年</span>
+    year <span class="token operator">=</span> <span class="token function">parseInt</span><span class="token punctuation">(</span>date<span class="token punctuation">.</span><span class="token function">slice</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">)</span>
+    month <span class="token operator">=</span> <span class="token function">parseInt</span><span class="token punctuation">(</span>date<span class="token punctuation">.</span><span class="token function">slice</span><span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">)</span>
+    day <span class="token operator">=</span> <span class="token function">parseInt</span><span class="token punctuation">(</span>date<span class="token punctuation">.</span><span class="token function">slice</span><span class="token punctuation">(</span><span class="token number">6</span><span class="token punctuation">,</span> <span class="token number">8</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span> <span class="token keyword keyword-else">else</span> <span class="token keyword keyword-if">if</span> <span class="token punctuation">(</span>date<span class="token punctuation">.</span>length <span class="token operator">===</span> <span class="token number">7</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 民國年</span>
+    year <span class="token operator">=</span> <span class="token function">parseInt</span><span class="token punctuation">(</span>date<span class="token punctuation">.</span><span class="token function">slice</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token constant">YEAR_BIAS</span>
+    month <span class="token operator">=</span> <span class="token function">parseInt</span><span class="token punctuation">(</span>date<span class="token punctuation">.</span><span class="token function">slice</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">)</span>
+    day <span class="token operator">=</span> <span class="token function">parseInt</span><span class="token punctuation">(</span>date<span class="token punctuation">.</span><span class="token function">slice</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span> <span class="token keyword keyword-else">else</span> <span class="token punctuation">{</span>
+    <span class="token keyword keyword-return">return</span> <span class="token boolean">false</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword keyword-if">if</span> <span class="token punctuation">(</span>month <span class="token operator">&lt;</span> <span class="token number">1</span> <span class="token operator">||</span> month <span class="token operator">&gt;</span> <span class="token number">12</span><span class="token punctuation">)</span> <span class="token keyword keyword-return">return</span> <span class="token boolean">false</span>
+  <span class="token keyword keyword-if">if</span> <span class="token punctuation">(</span>day <span class="token operator">&lt;</span> <span class="token number">1</span> <span class="token operator">||</span> day <span class="token operator">&gt;</span> <span class="token number">31</span><span class="token punctuation">)</span> <span class="token keyword keyword-return">return</span> <span class="token boolean">false</span>
+
+  <span class="token comment">// 使用 dayjs 精準檢查該月實際天數（考慮閏年）</span>
+  <span class="token keyword keyword-const">const</span> maxDay <span class="token operator">=</span> <span class="token function">dayjs</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>year<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">-</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>month<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">,</span> <span class="token string">'YYYY-M'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">daysInMonth</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+  <span class="token keyword keyword-return">return</span> day <span class="token operator">&lt;=</span> maxDay
+<span class="token punctuation">}</span>
+
+<span class="token comment">// ========================================</span>
+<span class="token comment">// 輔助函數：跳脫正則特殊字元（用於處理分隔符 /）</span>
+<span class="token keyword keyword-function">function</span> <span class="token function">escapeRegExp</span><span class="token punctuation">(</span>str<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">)</span><span class="token operator">:</span> <span class="token builtin">string</span> <span class="token punctuation">{</span>
+  <span class="token keyword keyword-return">return</span> str<span class="token punctuation">.</span><span class="token function">replace</span><span class="token punctuation">(</span><span class="token regex"><span class="token regex-delimiter">/</span><span class="token regex-source language-regex">[.*+?^${}()|[\]\\]</span><span class="token regex-delimiter">/</span><span class="token regex-flags">g</span></span><span class="token punctuation">,</span> <span class="token string">'\\$&amp;'</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// ========================================</span>
+<span class="token comment">// 初始化函數：專案啟動時呼叫</span>
+<span class="token keyword keyword-export">export</span> <span class="token keyword keyword-function">function</span> <span class="token function">setupMinguoDayjs</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  dayjs<span class="token punctuation">.</span><span class="token function">locale</span><span class="token punctuation">(</span><span class="token string">'zh-tw'</span><span class="token punctuation">)</span>           <span class="token comment">// 設定繁體中文語系</span>
+  dayjs<span class="token punctuation">.</span><span class="token function">extend</span><span class="token punctuation">(</span>customParseFormat<span class="token punctuation">)</span> <span class="token comment">// 啟用自訂格式解析</span>
+
+  <span class="token comment">// 套用插件</span>
+  dayjs<span class="token punctuation">.</span><span class="token function">extend</span><span class="token punctuation">(</span>minguoEra<span class="token punctuation">)</span>         <span class="token comment">// 顯示民國年</span>
+  dayjs<span class="token punctuation">.</span><span class="token function">extend</span><span class="token punctuation">(</span>minguoEraParse<span class="token punctuation">)</span>    <span class="token comment">// 解析民國年輸入</span>
+
+  <span class="token comment">// 讓面板顯示民國年</span>
+  <span class="token function">overrideYearMethod</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+</code></pre><h2 id="6-調整-maints">6. 調整 main.ts </h2>
 <ul>
 <li>
 <p>全局引入 Element Plus 的 CSS（全域）</p>
@@ -112,6 +336,9 @@ yarn add -D @element-plus/icons-vue unplugin-auto-import unplugin-vue-components
 <li>
 <p>全局引入 Element Icon</p>
 </li>
+<li>
+<p>全局設定 Element 日期套件 使用 民國年 (支援 不用輸入 <code>/</code>)</p>
+</li>
 </ul>
 <pre data-role="codeBlock" data-info="ts" class="language-ts ts"><code><span class="token keyword keyword-import">import</span> <span class="token punctuation">{</span> createApp <span class="token punctuation">}</span> <span class="token keyword keyword-from">from</span> <span class="token string">'vue'</span>
 <span class="token keyword keyword-import">import</span> <span class="token punctuation">{</span> createPinia <span class="token punctuation">}</span> <span class="token keyword keyword-from">from</span> <span class="token string">'pinia'</span>
@@ -120,8 +347,12 @@ yarn add -D @element-plus/icons-vue unplugin-auto-import unplugin-vue-components
 <span class="token keyword keyword-import">import</span> router <span class="token keyword keyword-from">from</span> <span class="token string">'./router'</span>
 <span class="token keyword keyword-import">import</span> <span class="token string">'element-plus/dist/index.css'</span>
 <span class="token keyword keyword-import">import</span> <span class="token string">'element-plus/theme-chalk/dark/css-vars.css'</span>
+<span class="token keyword keyword-import">import</span> ElementPlus <span class="token keyword keyword-from">from</span> <span class="token string">'element-plus'</span>
 <span class="token keyword keyword-import">import</span> <span class="token operator">*</span> <span class="token keyword keyword-as">as</span> ElementPlusIconsVue <span class="token keyword keyword-from">from</span> <span class="token string">'@element-plus/icons-vue'</span>
 <span class="token keyword keyword-import">import</span> dayjs <span class="token keyword keyword-from">from</span> <span class="token string">'dayjs'</span>
+<span class="token keyword keyword-import">import</span> zhTw <span class="token keyword keyword-from">from</span> <span class="token string">'element-plus/es/locale/lang/zh-tw'</span>
+<span class="token keyword keyword-import">import</span> <span class="token punctuation">{</span> setupMinguoDayjs <span class="token punctuation">}</span> <span class="token keyword keyword-from">from</span> <span class="token string">'./common/Dayjs/MinguoDayjs'</span>
+<span class="token function">setupMinguoDayjs</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
 
 <span class="token keyword keyword-const">const</span> app <span class="token operator">=</span> <span class="token function">createApp</span><span class="token punctuation">(</span>App<span class="token punctuation">)</span>
 
@@ -132,9 +363,11 @@ yarn add -D @element-plus/icons-vue unplugin-auto-import unplugin-vue-components
 app<span class="token punctuation">.</span><span class="token function">use</span><span class="token punctuation">(</span><span class="token function">createPinia</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
 app<span class="token punctuation">.</span><span class="token function">use</span><span class="token punctuation">(</span>router<span class="token punctuation">)</span>
 
+app<span class="token punctuation">.</span><span class="token function">use</span><span class="token punctuation">(</span>ElementPlus<span class="token punctuation">,</span> <span class="token punctuation">{</span> locale<span class="token operator">:</span> zhTw <span class="token punctuation">}</span><span class="token punctuation">)</span>
+
 app<span class="token punctuation">.</span><span class="token function">mount</span><span class="token punctuation">(</span><span class="token string">'#app'</span><span class="token punctuation">)</span>
 app<span class="token punctuation">.</span>config<span class="token punctuation">.</span>globalProperties<span class="token punctuation">.</span>$dayjs <span class="token operator">=</span> dayjs
-</code></pre><h2 id="6-建立-布局樣式">6. 建立 布局樣式 </h2>
+</code></pre><h2 id="7-建立-布局樣式">7. 建立 布局樣式 </h2>
 <p>使用下述方式，建立 網站整體布局樣式</p>
 <ul>
 <li>使用 Element Plus 的 <code>layout 布局</code> + <code>menu 組件</code>，來建立 左側邊欄。</li>
@@ -304,7 +537,7 @@ app<span class="token punctuation">.</span>config<span class="token punctuation"
   <span class="token property">border-right</span><span class="token punctuation">:</span> none<span class="token punctuation">;</span>
 <span class="token punctuation">}</span>
 </span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>style</span><span class="token punctuation">&gt;</span></span>
-</code></pre><h2 id="7-設定-範例頁面">7. 設定 範例頁面 </h2>
+</code></pre><h2 id="8-設定-範例頁面">8. 設定 範例頁面 </h2>
 <p>建立資料夾 <code>src/pages/Home</code>，並新增檔案 <code>index.vue</code>。</p>
 <p>複製貼上 下面的內容</p>
 <pre data-role="codeBlock" data-info="html" class="language-html html"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>template</span><span class="token punctuation">&gt;</span></span>
@@ -315,7 +548,7 @@ app<span class="token punctuation">.</span>config<span class="token punctuation"
 <pre data-role="codeBlock" data-info="html" class="language-html html"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>template</span><span class="token punctuation">&gt;</span></span>
     測試頁面
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>template</span><span class="token punctuation">&gt;</span></span>
-</code></pre><h2 id="8-設定-菜單文件-router">8. 設定 菜單文件 (router) </h2>
+</code></pre><h2 id="9-設定-菜單文件-router">9. 設定 菜單文件 (router) </h2>
 <p>開啟 <code>src/router/index.ts</code>，並將內容 調整為</p>
 <pre data-role="codeBlock" data-info="ts" class="language-ts ts"><code><span class="token keyword keyword-import">import</span> <span class="token punctuation">{</span> createRouter<span class="token punctuation">,</span> createWebHistory <span class="token punctuation">}</span> <span class="token keyword keyword-from">from</span> <span class="token string">'vue-router'</span>
 
@@ -348,12 +581,12 @@ app<span class="token punctuation">.</span>config<span class="token punctuation"
 <span class="token punctuation">}</span><span class="token punctuation">)</span>
 
 <span class="token keyword keyword-export">export</span> <span class="token keyword keyword-default">default</span> router
-</code></pre><h2 id="9-調整-網站標題">9. 調整 網站標題 </h2>
+</code></pre><h2 id="10-調整-網站標題">10. 調整 網站標題 </h2>
 <p>開啟 根目錄 的 <code>index.html</code>，於 <code>head</code> 的 <code>title</code> 可以設定 網站標題。</p>
-<h2 id="10-啟動專案">10. 啟動專案 </h2>
+<h2 id="11-啟動專案">11. 啟動專案 </h2>
 <p>於 <code>CMD</code> 執行</p>
 <pre data-role="codeBlock" data-info="textile" class="language-textile textile"><code><span class="token phrase">yarn dev
-</span></code></pre><p>訪問 <a href="http://localhost:5173/">http://localhost:5173/</a> 即可開啟網站</p>
+</span></code></pre><p>訪問 <a href="http://localhost:3000/">http://localhost:3000/</a> 即可開啟網站</p>
 
       </div>
       
