@@ -169,13 +169,21 @@ const router = createRouter({
         },
       ]
     },
+    {
+      path: "/Link",
+      name: "相關網站",
+      component: () => import('@/pages/Link/index.vue'),
+      meta: { 
+        icon: 'Link'
+      }
+    },
   ],
 })
 
 router.beforeEach((to, from) => {
-  console.log('路由守衛 - beforeEach')
-  console.log('to:', to.path)
-  console.log('from:', from.path)
+  // console.log('路由守衛 - beforeEach')
+  // console.log('to:', to.path)
+  // console.log('from:', from.path)
 })
 
 

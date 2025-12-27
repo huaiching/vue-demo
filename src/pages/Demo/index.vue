@@ -16,7 +16,6 @@ const value3 = ref('')
     <el-date-picker v-model="value2" type="month" placeholder="輸入日期" format="TTT/MM" />
   </div>
   <div>
-
     <el-date-picker v-model="value3" type="daterange" range-separator="To" start-placeholder="輸入起日"
       end-placeholder="輸入契日" format="TTT/MM/DD" />
   </div>
