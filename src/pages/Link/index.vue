@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import ElProFormCol from '@/common/Form/ElProFormCol.vue';
+import ElProFormRow from '@/common/Form/ElProFormRow.vue';
+
 
 const navigateList = [
   {
@@ -31,12 +34,14 @@ const handleOpenUrl = (url: string) => {
   window.open(url, '_blank');
 };
 
+const colSize = (4 / navigateList.length < 1) ? 1 : (4 / navigateList.length)
+console.log('colSize', colSize)
 </script>
 
 
 <template>
-  <el-row :gutter="16">
-    <el-col v-for="navigate in navigateList" :key="navigate.key" :xs="24" :sm="12" :md="8" :lg="6"> 
+  <el-pro-form-row :gutter="16">
+    <el-pro-form-col v-for="navigate in navigateList" :key="navigate.key" :col-size="colSize">
       <el-card shadow="hover" class="navigate-card" @click="handleOpenUrl(navigate.url)">
         <template #header>
           <span style="font-size: 18px; font-weight: bold;">
@@ -48,8 +53,8 @@ const handleOpenUrl = (url: string) => {
           {{ navigate.desc }}
         </div>
       </el-card>
-    </el-col>
-  </el-row>
+    </el-pro-form-col>
+  </el-pro-form-row>
 
 </template>
 
@@ -58,6 +63,7 @@ const handleOpenUrl = (url: string) => {
   height: 150px;
   text-align: center;
 }
+
 .navigate-card:hover {
   transform: translateY(-10px);
   box-shadow: 0 8px 20px rgba(76, 88, 92, 0.747);
