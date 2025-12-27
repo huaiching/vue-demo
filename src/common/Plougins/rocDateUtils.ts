@@ -16,7 +16,7 @@ const YEAR_BIAS = 1911
  * @param date 純數字字串（民國7位 或 西元8位）
  * @returns boolean
  */
-const isValidDate = (date: string): boolean => {
+export const isValidDate = (date: string): boolean => {
   let year = 0
   let month = 0
   let day = 0
