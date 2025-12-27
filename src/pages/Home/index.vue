@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import MliBreadcrumb from '@/common/Field/MliBreadcrumb.vue';
+import ComFormBreadcrumb from '@/common/Field/ComFormBreadcrumb.vue';
 
 </script>
 
 <template>
-    <MliBreadcrumb />
+    <ComFormBreadcrumb />
     首頁
 </template>
