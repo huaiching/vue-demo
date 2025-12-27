@@ -19,8 +19,8 @@ const YEAR_BIAS = 1911  // 民國紀年與西元紀年的差值（1911）
 // ========================================
 // 1. 顯示插件：負責將 TTT 轉換為民國年顯示
 // ========================================
-const minguoEra = (_o: any, c: any) => {
-  const prototype = c.prototype
+const minguoEra = (option: any, dayjsClass: any) => {
+  const prototype = dayjsClass.prototype
   const oldFormat = prototype.format  // 保存原始 format 方法
 
   // 覆寫 Day.js 的 format 方法
@@ -40,8 +40,8 @@ const minguoEra = (_o: any, c: any) => {
 // 2. 解析插件：負責將使用者輸入的民國年轉換為 Day.js 可理解的西元年格式
 //    支援：有分隔符、無分隔符、西元年輸入，並加入嚴格日期校驗
 // ========================================
-const minguoEraParse = (_o: any, c: any) => {
-  const prototype = c.prototype
+const minguoEraParse = (option: any, dayjsClass: any) => {
+  const prototype = dayjsClass.prototype
   const oldParse = prototype.parse  // 保存原始 parse 方法
 
   prototype.parse = function (cfg: any) {
