@@ -12,7 +12,6 @@
 import dayjs from 'dayjs'
 import 'dayjs/locale/zh-tw'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
-import { isValidDate } from './rocDateUtils'  // 自訂日期校驗工具
 import { ElMessage } from 'element-plus'
 
 const YEAR_BIAS = 1911  // 民國紀年與西元紀年的差值（1911）
@@ -168,6 +167,38 @@ const overrideYearMethod = () => {
     // 取年份時：返回民國年
     return originalYear.call(this) - YEAR_BIAS
   }
+}
+
+/**
+ * 檢查傳入的年月日是否為合法日期
+ * @param date 純數字字串（民國7位 或 西元8位）
+ * @returns boolean
+ */
+export const isValidDate = (date: string): boolean => {
+  let year = 0
+  let month = 0
+  let day = 0
+
+  if (date.length === 8) {
+    // 西元年
+    year = parseInt(date.slice(0, 4), 10)
+    month = parseInt(date.slice(4, 6), 10)
+    day = parseInt(date.slice(6, 8), 10)
+  } else if (date.length === 7) {
+    // 民國年
+    year = parseInt(date.slice(0, 3), 10) + YEAR_BIAS
+    month = parseInt(date.slice(3, 5), 10)
+    day = parseInt(date.slice(5, 7), 10)
+  } else {
+    return false
+  }
+
+  if (month < 1 || month > 12) return false
+  if (day < 1 || day > 31) return false
+
+  // 使用 dayjs 精準檢查該月實際天數（考慮閏年）
+  const maxDay = dayjs(`${year}-${month}`, 'YYYY-M').daysInMonth()
+  return day <= maxDay
 }
 
 // ========================================
