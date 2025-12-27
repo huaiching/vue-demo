@@ -133,15 +133,10 @@ const minguoEraParse = (option: any, dayjsClass: any) => {
         })
       } else {
         // 日期無效（如 114/01/50、114/02/30）
-        // 顯示錯誤訊息，並讓 Element Plus 顯示紅框
-        let newFormat: string = format.includes('DD') ? 'YYYY/MM/DD' : 'YYYY/MM'
-        ElMessage.error('日期格式錯誤，請輸入正確的民國或西元年月日')
+        // 顯示錯誤訊息
+        ElMessage.error('日期格式錯誤，請檢查年月日是否正確')
 
-        return oldParse.call(this, {
-          ...cfg,
-          date: null,  // 強制無效，讓元件顯示錯誤狀態
-          args: [null, newFormat],
-        })
+        return null
       }
     }
   }
