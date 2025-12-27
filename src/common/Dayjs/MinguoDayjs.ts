@@ -71,19 +71,18 @@ const minguoEraParse = (option: any, dayjsClass: any) => {
     // ========================
     let digitsOnly = inputDate.replace(/\D/g, '')  // 移除所有非數字
 
-    // 處理西元年輸入（如 20250101 → 轉為民國格式 1140101）
-    if (format === 'TTT/MM/DD' && digitsOnly.length === 8) {
-      const year = parseInt(inputDate.slice(0, 4), 10) - 1911
-      const month = parseInt(inputDate.slice(4, 6), 10)
-      const day = parseInt(inputDate.slice(6, 8), 10)
-      digitsOnly = `${String(year).padStart(3, '0')}${String(month).padStart(2, '0')}${String(day).padStart(2, '0')}`
+    // 年月格式補日為 01
+    if (format === 'TTT/MM') {
+      digitsOnly = digitsOnly + '01'
     }
-
-    // 處理西元年輸入 + 年月格式補日為 01（如輸入 202501 → 轉為 1140101）
-    if (format === 'TTT/MM' && digitsOnly.length === 6) {
-      const year = parseInt(inputDate.slice(0, 4), 10) - 1911
-      const month = parseInt(inputDate.slice(4, 6), 10)
-      digitsOnly = `${String(year).padStart(3, '0')}${String(month).padStart(2, '0')}01`
+    console.log('format',format)
+    console.log('digitsOnly',digitsOnly)
+    // 處理西元年輸入
+    if (digitsOnly.length === 8) {
+      const year = parseInt(digitsOnly.slice(0, 4), 10) - 1911
+      const month = parseInt(digitsOnly.slice(4, 6), 10)
+      const day = parseInt(digitsOnly.slice(6, 8), 10)
+      digitsOnly = `${String(year).padStart(3, '0')}${String(month).padStart(2, '0')}${String(day).padStart(2, '0')}`
     }
 
     // ========================
