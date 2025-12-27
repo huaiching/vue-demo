@@ -33,7 +33,7 @@ const minguoEra = (_o: any, c: any) => {
 }
 
 // ========================================
-// 2. 解析插件：支援輸入民國年（已修正 TypeScript 安全）
+// 2. 解析插件：支援輸入民國年
 const minguoEraParse = (_o: any, c: any) => {
   const prototype = c.prototype
   const oldParse = prototype.parse
