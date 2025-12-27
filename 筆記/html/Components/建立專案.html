@@ -235,15 +235,10 @@ yarn add -D @element-plus/icons-vue unplugin-auto-import unplugin-vue-components
         <span class="token punctuation">}</span><span class="token punctuation">)</span>
       <span class="token punctuation">}</span> <span class="token keyword keyword-else">else</span> <span class="token punctuation">{</span>
         <span class="token comment">// 日期無效（如 114/01/50、114/02/30）</span>
-        <span class="token comment">// 顯示錯誤訊息，並讓 Element Plus 顯示紅框</span>
-        <span class="token keyword keyword-let">let</span> newFormat<span class="token operator">:</span> <span class="token builtin">string</span> <span class="token operator">=</span> format<span class="token punctuation">.</span><span class="token function">includes</span><span class="token punctuation">(</span><span class="token string">'DD'</span><span class="token punctuation">)</span> <span class="token operator">?</span> <span class="token string">'YYYY/MM/DD'</span> <span class="token operator">:</span> <span class="token string">'YYYY/MM'</span>
-        ElMessage<span class="token punctuation">.</span><span class="token function">error</span><span class="token punctuation">(</span><span class="token string">'日期格式錯誤，請輸入正確的民國或西元年月日'</span><span class="token punctuation">)</span>
+        <span class="token comment">// 顯示錯誤訊息</span>
+        ElMessage<span class="token punctuation">.</span><span class="token function">error</span><span class="token punctuation">(</span><span class="token string">'日期格式錯誤，請檢查年月日是否正確'</span><span class="token punctuation">)</span>
 
-        <span class="token keyword keyword-return">return</span> <span class="token function">oldParse</span><span class="token punctuation">.</span><span class="token function">call</span><span class="token punctuation">(</span><span class="token keyword keyword-this">this</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
-          <span class="token operator">...</span>cfg<span class="token punctuation">,</span>
-          date<span class="token operator">:</span> <span class="token keyword keyword-null">null</span><span class="token punctuation">,</span>  <span class="token comment">// 強制無效，讓元件顯示錯誤狀態</span>
-          args<span class="token operator">:</span> <span class="token punctuation">[</span><span class="token keyword keyword-null">null</span><span class="token punctuation">,</span> newFormat<span class="token punctuation">]</span><span class="token punctuation">,</span>
-        <span class="token punctuation">}</span><span class="token punctuation">)</span>
+        <span class="token keyword keyword-return">return</span> <span class="token keyword keyword-null">null</span>
       <span class="token punctuation">}</span>
     <span class="token punctuation">}</span>
   <span class="token punctuation">}</span>
