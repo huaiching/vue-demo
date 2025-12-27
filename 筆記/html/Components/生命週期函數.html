@@ -1,5 +1,5 @@
 <!DOCTYPE html><html><head>
-      <title>vue的頁面結構</title>
+      <title>生命週期函數</title>
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       
@@ -26,48 +26,71 @@
     
       <div class="crossnote markdown-preview  ">
       
-<h1 id="vue-的-頁面結構">vue 的 頁面結構 </h1>
-<p>vue 3 的頁面布局，與 傳統 html 類似，分為以下三部分</p>
+<h1 id="生命週期函數">生命週期函數 </h1>
+<p>每個 <code>vue 元件</code> 從 <code>創建</code> 到 <code>取消掛載</code>，會經歷 各個階段，這些階段 都有對應的 <code>生命週期函數</code> 可以讓 開發人員 進行 <code>需要的邏輯處理</code>，</p>
+<p><img src="image/lifeCycle_01.png" alt="alt text"></p>
+<p>例如：</p>
 <ul>
-<li><code>script setup lang="ts"</code> : JavaScript 部分
+<li><code>初始渲染完成</code> 階段為 <code>mounted</code>，此時有對應的生命週期函數 <code>onMounted</code> 可以使用。
 <ul>
-<li>此為 <code>vue 3</code> 的語法糖，會自動將 <code>邏輯</code> 暴露給 <code>template</code> 使用，減少 <code>傳統 vue</code> 開發時的繁複設定</li>
-<li><code>lang="ts"</code> : 標示為 <code>TypeScript</code></li>
-<li>這裡便會擺放
+<li>使用場景：
 <ul>
-<li>import</li>
-<li>官方相關的變數宣告</li>
-<li>自訂的變數宣告</li>
-<li>函式</li>
-<li>生命週期函式 (依照生命週期執行順序擺放)</li>
+<li>發送 API 取得初始化資料</li>
 </ul>
 </li>
 </ul>
 </li>
-<li><code>template</code> : html body 部分
+<li><code>頁面渲染完成</code> 階段為 <code>updated</code>，此時有對應的生命週期函數 <code>onUpdated</code> 可以使用。
 <ul>
-<li>要顯示的 <code>頁面布局設定</code></li>
-<li>可使用 <code>html 標籤</code> 及 <code>vue的頁面標籤</code></li>
-<li>使用 <code>Java Script 元素</code> 需要使用 <code>{{ }}</code> 標示，如：<code>{{ route.name }}</code></li>
-</ul>
-</li>
-<li><code>style scoped</code> : css 部分
+<li>使用場景：
 <ul>
-<li>有設定 <code>scoped</code> 屬性，該樣式為 本地樣式，只會部屬在當前頁面上，不會渲染到 子組件中</li>
+<li>資料同步作業</li>
 </ul>
 </li>
 </ul>
+</li>
+</ul>
+<h2 id="語法">語法 </h2>
+<p>以 <code>初始渲染完成 (mounted)</code> 和 <code>頁面渲染完成 (updated)</code> 為例，其餘可參考圖片說明。</p>
+<pre data-role="codeBlock" data-info="ts" class="language-ts ts"><code><span class="token operator">&lt;</span>script setup lang<span class="token operator">=</span><span class="token string">"ts"</span><span class="token operator">&gt;</span>
+<span class="token function">onMounted</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">=&gt;</span><span class="token punctuation">{</span>
+    初始渲染完成後，要進行的邏輯處理
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token function">onUpdated</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">=&gt;</span><span class="token punctuation">{</span>
+    頁面渲染完成後，要進行的邏輯處理
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>script<span class="token operator">&gt;</span>
+</code></pre><h2 id="範例">範例 </h2>
 <pre data-role="codeBlock" data-info="html" class="language-html html"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">setup</span> <span class="token attr-name">lang</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>ts<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
-    <span class="token doc-comment comment">/** Java Script 及 程式邏輯 **/</span>
+<span class="token keyword module keyword-import">import</span> <span class="token imports"><span class="token punctuation">{</span> ref<span class="token punctuation">,</span> onMounted<span class="token punctuation">,</span> onUpdated <span class="token punctuation">}</span></span> <span class="token keyword module keyword-from">from</span> <span class="token string">'vue'</span>
+
+<span class="token keyword keyword-const">const</span> message <span class="token operator">=</span> <span class="token function">ref</span><span class="token punctuation">(</span><span class="token string">'初始內容'</span><span class="token punctuation">)</span>
+<span class="token keyword keyword-const">const</span> status <span class="token operator">=</span> <span class="token function">ref</span><span class="token punctuation">(</span><span class="token string">'尚未掛載'</span><span class="token punctuation">)</span>
+
+<span class="token comment">// 標記是否第一次掛載</span>
+<span class="token keyword keyword-let">let</span> mounted <span class="token operator">=</span> <span class="token boolean">false</span>
+<span class="token comment">// 初始渲染完成</span>
+<span class="token function">onMounted</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=&gt;</span> <span class="token punctuation">{</span>
+  status<span class="token punctuation">.</span><span class="token property-access">value</span> <span class="token operator">=</span> <span class="token string">'元件已掛載完成'</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token comment">// 頁面渲染完成</span>
+<span class="token function">onUpdated</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=&gt;</span> <span class="token punctuation">{</span>
+  <span class="token comment">// 只在已掛載後，且 message 改變時更新狀態</span>
+  <span class="token keyword control-flow keyword-if">if</span> <span class="token punctuation">(</span>mounted<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    status<span class="token punctuation">.</span><span class="token property-access">value</span> <span class="token operator">=</span> <span class="token string">'畫面已更新'</span>
+  <span class="token punctuation">}</span>
+  mounted <span class="token operator">=</span> <span class="token boolean">true</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
 </span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
 
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>template</span><span class="token punctuation">&gt;</span></span>
-    <span class="token comment">&lt;!-- 頁面樣式 --&gt;</span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>h1</span><span class="token punctuation">&gt;</span></span>生命週期函數<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>h1</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span>message：{{ message }}<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span>status：{{ status }}<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>button</span> <span class="token attr-name">@click</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>message = '內容已變更'<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>更新內容<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>button</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>template</span><span class="token punctuation">&gt;</span></span>
-
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>style</span> <span class="token attr-name">scoped</span><span class="token punctuation">&gt;</span></span><span class="token style"><span class="token language-css">
-    <span class="token comment">/** CSS 樣式 **/</span>
-</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>style</span><span class="token punctuation">&gt;</span></span>
 </code></pre>
       </div>
       

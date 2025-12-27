@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>React 教學筆記</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      display: flex;
+      height: 100vh;
+    }
+
+    nav {
+      width: 350px;
+      background-color: #f5f5f5;
+      padding: 1em;
+      border-right: 1px solid #ccc;
+      box-sizing: border-box;
+      overflow-y: auto;
+    }
+
+    nav h2 {
+      font-size: 1.2em;
+      margin-top: 0;
+    }
+
+    nav ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    nav li {
+      margin: 0.5em 0;
+    }
+
+    nav a {
+      color: #007BFF;
+      text-decoration: none;
+      display: block;
+      padding: 0.2em;
+      border-radius: 4px;
+    }
+
+    nav a:hover {
+      text-decoration: underline;
+    }
+
+    nav a.active {
+      background-color: #007BFF;
+      color: white;
+      font-weight: bold;
+    }
+
+    iframe {
+      flex: 1;
+      border: none;
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <h2>Vue 教學筆記</h2>
+    <ul id="nav-list"></ul>
+  </nav>
+
+  <iframe name="content-frame" src="Components/建立專案.html" id="content-frame"></iframe>
+
+  <script>
+    // 定義章節陣列
+    const chapters = [
+      { id: '01', title: '建立專案' },
+      { id: '02', title: '資料結構與相關元件' },
+      { id: '03', title: 'vue的頁面結構' },
+      { id: '04', title: '響應式數據 - ref、reactive 和 computed' },
+      { id: '05', title: '屬性綁定 - v-bind' },
+      { id: '06', title: '事件處理 - v-on' },
+      { id: '07', title: '雙向綁定 - v-model' },
+      { id: '08', title: '資料傳遞 - props 和 emit' },
+      { id: '09', title: '條件渲染 - v-if 和 v-show' },
+      { id: '10', title: '動態切換元件 - component' },
+      { id: '11', title: '迭代渲染 - v-for' },
+      { id: '12', title: '監聽器 - watch' },
+      { id: '13', title: '插槽 - slot' },
+      { id: '14', title: '生命週期函數' },
+      { id: '15', title: 'Pinia - 全域資料管理' },
+      { id: '16', title: 'vue-Router - 路由管理' },
+    ];
+
+    // 使用 map 產生導覽列
+    const navList = document.getElementById('nav-list');
+    const navHTML = chapters.map(chapter => {
+      const href = `Components/${chapter.title}.html`;
+      return `
+        <li>
+          <a href="${href}" target="content-frame">${chapter.id} ${chapter.title}</a>
+        </li>
+      `;
+    }).join('');
+    
+    navList.innerHTML = navHTML;
+
+    // 獲取所有連結
+    const links = document.querySelectorAll('nav a');
+    const iframe = document.getElementById('content-frame');
+
+    function setActiveLink(href) {
+      links.forEach(link => {
+        if (link.getAttribute('href') === href) {
+          link.classList.add('active');
+        } else {
+          link.classList.remove('active');
+        }
+      });
+    }
+
+    // 初始載入
+    setActiveLink(iframe.getAttribute('src'));
+
+    // 當使用者點擊側邊欄連結時，更新樣式
+    links.forEach(link => {
+      link.addEventListener('click', (e) => {
+        setActiveLink(link.getAttribute('href'));
+      });
+    });
+
+    // 當 iframe 中的內容變動時也嘗試更新
+    iframe.addEventListener('load', () => {
+      const src = iframe.contentWindow.location.pathname.split('/').pop();
+      const fullPath = 'Components/' + src;
+      setActiveLink(fullPath);
+    });
+  </script>
+</body>
+</html>

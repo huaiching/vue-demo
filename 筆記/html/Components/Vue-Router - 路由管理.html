@@ -32,30 +32,60 @@
 <blockquote>
 <p>此說明 將根據 <code>App.vue</code> 中建立的 layout 頁面來進行說明</p>
 </blockquote>
-<h2 id="檔案位置">檔案位置 </h2>
+<h2 id="路由配置檔案">路由配置檔案 </h2>
+<p><strong>檔案位置：</strong></p>
 <p>路由設定檔，位於 <code>src/router/index.ts</code>。</p>
-<ul>
-<li><code>path</code>：URL (第一層要有【/】)</li>
-<li><code>name</code>：路由名稱</li>
-<li><code>component</code>：路由 對應的 頁面檔案位置
+<p><strong>基本配置結構：</strong></p>
+<table>
+<thead>
+<tr>
+<th>屬性</th>
+<th>說明</th>
+<th>範例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>path</code></td>
+<td>URL 路徑（第一層必須以 <code>/</code> 開頭）</td>
+<td><code>/home</code></td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>路由名稱（唯一識別）</td>
+<td><code>'首頁'</code></td>
+</tr>
+<tr>
+<td><code>component</code></td>
+<td>對應的頁面組件</td>
+<td><code>() =&gt; import('@/pages/Home.vue')</code></td>
+</tr>
+<tr>
+<td><code>redirect</code></td>
+<td>路由重定向</td>
+<td><code>'/home'</code></td>
+</tr>
+<tr>
+<td><code>children</code></td>
+<td>子路由陣列</td>
+<td><code>[{ path: 'detail', ... }]</code></td>
+</tr>
+<tr>
+<td><code>meta</code></td>
+<td>自訂資料（如權限、圖示）</td>
+<td><code>{ icon: 'House', requiresAuth: true }</code></td>
+</tr>
+</tbody>
+</table>
 <blockquote>
-<p>component: () =&gt; import('頁面檔案路徑'), <br><br>
-<code>@</code>：src/</p>
+<p><strong>提示：</strong> <code>@</code> 符號代表 <code>src/</code> 目錄</p>
 </blockquote>
-</li>
-<li><code>redirect</code>：路由跳轉</li>
-<li><code>children</code>：子路由
-<blockquote>
-<p>children: [ ... ]</p>
-</blockquote>
-</li>
-<li><code>meta</code>：擺放 自定義 屬性</li>
-</ul>
 <pre data-role="codeBlock" data-info="ts" class="language-ts ts"><code><span class="token keyword keyword-import">import</span> <span class="token punctuation">{</span> createRouter<span class="token punctuation">,</span> createWebHistory<span class="token punctuation">,</span> RouterView <span class="token punctuation">}</span> <span class="token keyword keyword-from">from</span> <span class="token string">'vue-router'</span>
 
 <span class="token keyword keyword-const">const</span> router <span class="token operator">=</span> <span class="token function">createRouter</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
   history<span class="token operator">:</span> <span class="token function">createWebHistory</span><span class="token punctuation">(</span><span class="token keyword keyword-import">import</span><span class="token punctuation">.</span>meta<span class="token punctuation">.</span>env<span class="token punctuation">.</span><span class="token constant">BASE_URL</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
   routes<span class="token operator">:</span> <span class="token punctuation">[</span>
+    <span class="token comment">// 路由配置</span>
     <span class="token punctuation">{</span>
       path<span class="token operator">:</span> <span class="token string">'/'</span><span class="token punctuation">,</span>
       redirect<span class="token operator">:</span> <span class="token string">'/home'</span><span class="token punctuation">,</span>
@@ -85,6 +115,7 @@
   <span class="token punctuation">]</span><span class="token punctuation">,</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span>
 
+<span class="token comment">// 生命週期函數</span>
 router<span class="token punctuation">.</span><span class="token function">beforeEach</span><span class="token punctuation">(</span><span class="token punctuation">(</span>to<span class="token punctuation">,</span> from<span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
   <span class="token builtin">console</span><span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'路由守衛 - beforeEach'</span><span class="token punctuation">)</span>
   <span class="token builtin">console</span><span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'to:'</span><span class="token punctuation">,</span> to<span class="token punctuation">.</span>path<span class="token punctuation">)</span>
@@ -106,11 +137,10 @@ router<span class="token punctuation">.</span><span class="token function">befor
   <span class="token punctuation">}</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span>
 </code></pre><h2 id="動態路由">動態路由 </h2>
-<p>動態路由是用來處理帶有參數的 URL，例如顯示特定使用者、文章或產品的頁面。</p>
-<ul>
-<li>使用 <code>:</code> 來標記動態段，參數名稱可自訂，如：<code>:id</code>。</li>
-<li>如果非必填，於最後面加上 <code>?</code> 表示，如：<code>:keyword?</code>。</li>
-</ul>
+<p>動態路由用於處理<strong>帶有參數的 URL</strong>，例如：使用者詳情、文章頁面、產品資訊等。</p>
+<p><strong>路由定義：</strong></p>
+<p>使用 <code>:</code> 來標記動態段，參數名稱可自訂，如：<code>:id</code>。</p>
+<p>如果非必填，於最後面加上 <code>?</code> 表示，如：<code>:keyword?</code>。</p>
 <pre data-role="codeBlock" data-info="ts" class="language-ts ts"><code><span class="token punctuation">{</span>
   path<span class="token operator">:</span> <span class="token string">'/user/:id'</span><span class="token punctuation">,</span>              <span class="token comment">// :id 為動態參數</span>
   name<span class="token operator">:</span> <span class="token string">'使用者詳情'</span><span class="token punctuation">,</span>
@@ -136,7 +166,9 @@ router<span class="token punctuation">.</span><span class="token function">befor
   name<span class="token operator">:</span> <span class="token string">'NotFound'</span><span class="token punctuation">,</span>
   <span class="token function-variable function">component</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token keyword keyword-import">import</span><span class="token punctuation">(</span><span class="token string">'@/pages/NotFound/index.vue'</span><span class="token punctuation">)</span>
 <span class="token punctuation">}</span>
-</code></pre><h4 id="在頁面組件中取得參數">在頁面組件中取得參數 </h4>
+</code></pre><p><strong>在頁面組件中取得參數：</strong></p>
+<p>透過 <code>useRoute()</code> 可取得 該頁面的 router 相關資料。</p>
+<p>藉由 <code>router.params</code> 即可獲得相關參數。</p>
 <pre data-role="codeBlock" data-info="html" class="language-html html"><code><span class="token comment">&lt;!-- 在 UserDetail/index.vue 中 --&gt;</span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">setup</span> <span class="token attr-name">lang</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>ts<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
 <span class="token keyword module keyword-import">import</span> <span class="token imports"><span class="token punctuation">{</span> useRoute <span class="token punctuation">}</span></span> <span class="token keyword module keyword-from">from</span> <span class="token string">'vue-router'</span>
@@ -184,17 +216,17 @@ router<span class="token punctuation">.</span><span class="token function">befor
 <li>
 <p>原頁面跳轉</p>
 <blockquote>
-<p>參數銷毀 <code>sessionStorage.removeItem()</code> 於 新頁面 執行。</p>
+<p>參數銷毀 <code>sessionStorage.removeItem()</code> 於 接收端 執行。</p>
 </blockquote>
 <ul>
 <li>
-<p>原頁面</p>
+<p>傳送端（原頁面）</p>
 <pre data-role="codeBlock" data-info="ts" class="language-ts ts"><code><span class="token keyword keyword-const">const</span> data <span class="token operator">=</span> <span class="token punctuation">{</span> name<span class="token operator">:</span> <span class="token string">'測試用戶'</span><span class="token punctuation">,</span> age<span class="token operator">:</span> <span class="token number">25</span> <span class="token punctuation">}</span>
 sessionStorage<span class="token punctuation">.</span><span class="token function">setItem</span><span class="token punctuation">(</span><span class="token string">'params'</span><span class="token punctuation">,</span> <span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">stringify</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span><span class="token punctuation">)</span>
 window<span class="token punctuation">.</span><span class="token function">open</span><span class="token punctuation">(</span><span class="token string">'/vueDemo/RouterPath/router'</span><span class="token punctuation">,</span> <span class="token string">'_blank'</span><span class="token punctuation">)</span>
 </code></pre></li>
 <li>
-<p>新頁面</p>
+<p>接收端（新頁面）</p>
 <pre data-role="codeBlock" data-info="ts" class="language-ts ts"><code><span class="token keyword keyword-let">let</span> params<span class="token operator">:</span> <span class="token punctuation">{</span> name<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">;</span> age<span class="token operator">:</span> <span class="token builtin">number</span> <span class="token punctuation">}</span> <span class="token operator">|</span> <span class="token keyword keyword-null">null</span> <span class="token operator">=</span> <span class="token keyword keyword-null">null</span><span class="token punctuation">;</span>
 <span class="token keyword keyword-if">if</span> <span class="token punctuation">(</span>sessionStorage<span class="token punctuation">.</span><span class="token function">getItem</span><span class="token punctuation">(</span><span class="token string">'params'</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   params <span class="token operator">=</span> <span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>sessionStorage<span class="token punctuation">.</span><span class="token function">getItem</span><span class="token punctuation">(</span><span class="token string">'params'</span><span class="token punctuation">)</span> <span class="token operator">||</span> <span class="token string">'{}'</span><span class="token punctuation">)</span>
@@ -206,18 +238,18 @@ window<span class="token punctuation">.</span><span class="token function">open<
 <li>
 <p>新開分頁跳轉</p>
 <blockquote>
-<p>參數銷毀 <code>sessionStorage.removeItem()</code> 於 原頁面 執行。</p>
+<p>參數銷毀 <code>sessionStorage.removeItem()</code> 於 傳送端 執行。</p>
 </blockquote>
 <ul>
 <li>
-<p>原頁面</p>
+<p>傳送端（原頁面）</p>
 <pre data-role="codeBlock" data-info="ts" class="language-ts ts"><code><span class="token keyword keyword-const">const</span> data <span class="token operator">=</span> <span class="token punctuation">{</span> name<span class="token operator">:</span> <span class="token string">'測試用戶'</span><span class="token punctuation">,</span> age<span class="token operator">:</span> <span class="token number">25</span> <span class="token punctuation">}</span>
 sessionStorage<span class="token punctuation">.</span><span class="token function">setItem</span><span class="token punctuation">(</span><span class="token string">'params'</span><span class="token punctuation">,</span> <span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">stringify</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span><span class="token punctuation">)</span>
 window<span class="token punctuation">.</span><span class="token function">open</span><span class="token punctuation">(</span><span class="token string">'/vueDemo/RouterPath/window'</span><span class="token punctuation">,</span> <span class="token string">'_blank'</span><span class="token punctuation">)</span>
 sessionStorage<span class="token punctuation">.</span><span class="token function">removeItem</span><span class="token punctuation">(</span><span class="token string">'params'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 </code></pre></li>
 <li>
-<p>新頁面</p>
+<p>接收端（新頁面）</p>
 <pre data-role="codeBlock" data-info="ts" class="language-ts ts"><code><span class="token keyword keyword-let">let</span> params<span class="token operator">:</span> <span class="token punctuation">{</span> name<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">;</span> age<span class="token operator">:</span> <span class="token builtin">number</span> <span class="token punctuation">}</span> <span class="token operator">|</span> <span class="token keyword keyword-null">null</span> <span class="token operator">=</span> <span class="token keyword keyword-null">null</span><span class="token punctuation">;</span>
 <span class="token keyword keyword-if">if</span> <span class="token punctuation">(</span>sessionStorage<span class="token punctuation">.</span><span class="token function">getItem</span><span class="token punctuation">(</span><span class="token string">'params'</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   params <span class="token operator">=</span> <span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>sessionStorage<span class="token punctuation">.</span><span class="token function">getItem</span><span class="token punctuation">(</span><span class="token string">'params'</span><span class="token punctuation">)</span> <span class="token operator">||</span> <span class="token string">'{}'</span><span class="token punctuation">)</span>
@@ -226,13 +258,42 @@ sessionStorage<span class="token punctuation">.</span><span class="token functio
 </ul>
 </li>
 </ul>
-<h2 id="重要的-layout-元件">重要的 layout 元件 </h2>
+<h2 id="重要的-layout-核心組件">重要的 layout 核心組件 </h2>
 <ul>
-<li><code>RouterLink</code>：頁面跳轉元件<pre data-role="codeBlock" data-info="html" class="language-html html"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>RouterLink</span> <span class="token attr-name">to</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>要前往的URL<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>按鈕的名稱<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>RouterLink</span><span class="token punctuation">&gt;</span></span>
+<li>
+<p><code>RouterLink</code>：路由導航組件</p>
+<table>
+<thead>
+<tr>
+<th>屬性</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>to</code></td>
+<td>目標路由（字串或物件）</td>
+</tr>
+<tr>
+<td><code>replace</code></td>
+<td>使用 replace 模式（不留歷史記錄）</td>
+</tr>
+<tr>
+<td><code>active-class</code></td>
+<td>連結激活時的 CSS 類名</td>
+</tr>
+<tr>
+<td><code>exact-active-class</code></td>
+<td>連結精確激活時的 CSS 類名</td>
+</tr>
+</tbody>
+</table>
+<pre data-role="codeBlock" data-info="html" class="language-html html"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>RouterLink</span> <span class="token attr-name">to</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>要前往的URL<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>按鈕的名稱<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>RouterLink</span><span class="token punctuation">&gt;</span></span>
 </code></pre></li>
-<li><code>RouterView</code>：畫面顯示元件
+<li>
+<p><code>RouterView</code>：路由視圖組件</p>
 <ul>
-<li>負責將 RouterLink 前往的頁面，顯示於畫面上</li>
+<li>負責顯示當前路由對應的組件內容。</li>
 </ul>
 <pre data-role="codeBlock" data-info="html" class="language-html html"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>RouterView</span> <span class="token punctuation">/&gt;</span></span>
 </code></pre></li>
