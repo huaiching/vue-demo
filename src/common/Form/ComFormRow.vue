@@ -11,7 +11,7 @@ const props = defineProps<ElFormRowProps>()
 <template>
   <el-row
     tag="div"
-    :gutter="0"
+    :gutter="10"
     justify="start"
     v-bind="$attrs"
     :style="props.style"

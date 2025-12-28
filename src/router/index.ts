@@ -170,6 +170,26 @@ const router = createRouter({
       ]
     },
     {
+      path: "/element",
+      name: "Element 範例",
+      meta: { 
+        icon: 'ElementPlus'
+      },
+      children: [
+        {
+          path: "demo",
+          name: "測試用",
+          component: () => import('@/pages/ElementDemo/Demo/index.vue'),
+        },
+        {
+          path: "ElForm",
+          name: "el-form 表單",
+          component: () => import('@/pages/ElementDemo/ElForm/index.vue'),
+        },
+      ]
+      
+    },
+    {
       path: "/Link",
       name: "相關網站",
       component: () => import('@/pages/Link/index.vue'),
