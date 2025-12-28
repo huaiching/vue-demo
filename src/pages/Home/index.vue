@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import ComFormBreadcrumb from '@/common/Field/ComFormBreadcrumb.vue';
+import ProBreadcrumb from '@/common/Field/ProBreadcrumb.vue';
 
 </script>
 
 <template>
-    <ComFormBreadcrumb />
+    <ProBreadcrumb />
     首頁
 </template>

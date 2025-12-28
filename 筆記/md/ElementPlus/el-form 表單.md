@@ -157,17 +157,17 @@ const rules: FormRules = {
 
 ## 範例
 
-> `ComFormBreadcrumb`、`ComFormFooter`、`ComFormRow`、`ComFormCol` 為自製元件。
-> `ComFormRow` 於 `template` 會變成 `com-form-row` (此為 vue 特性)
+> `ProBreadcrumb`、`ProFormFooter`、`ProFormRow`、`ProFormCol` 為自製元件。
+> `ProFormRow` 於 `template` 會變成 `pro-form-row` (此為 vue 特性)
 
 ```html
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
-import ComFormBreadcrumb from '@/common/Field/ComFormBreadcrumb.vue'
-import ComFormFooter from '@/common/Field/ComFormFooter.vue'
-import ComFormRow from '@/common/Form/ComFormRow.vue'
-import ComFormCol from '@/common/Form/ComFormCol.vue'
+import PromBreadcrumb from '@/common/Field/ProBreadcrumb.vue'
+import ProFormFooter from '@/common/Field/ProFormFooter.vue'
+import ProFormRow from '@/common/Form/ProFormRow.vue'
+import ProFormCol from '@/common/Form/ProFormCol.vue'
 
 // form 實例
 const formRef = ref<FormInstance>()
@@ -193,6 +193,7 @@ const rules: FormRules = {
 // 送出
 const submit = async () => {
   if (!formRef.value) return
+  
   await formRef.value.validate((valid) => {
     if (valid) {
       alert('Email 驗證通過：' + form.email)
@@ -202,26 +203,26 @@ const submit = async () => {
 </script>
 
 <template>
-  <com-form-breadcrumb />
+  <pro-breadcrumb />
   <el-form ref="formRef" :model="form" :rules="rules" label-position="top" label-width="auto" >
-    <com-form-row>
-      <com-form-col :col-size=1>
+    <pro-form-row>
+      <pro-form-col :col-size=1>
         <el-form-item label="Email" prop="email">
           <el-input v-model="form.email" placeholder="請輸入 Email" />
         </el-form-item>
-      </com-form-col>
-      <com-form-col :col-size=1>
+      </pro-form-col>
+      <pro-form-col :col-size=1>
         <el-form-item label="地址" prop="address" >
           <el-input v-model="form.address" placeholder="請輸入 地址" />
         </el-form-item>
-      </com-form-col>
-    </com-form-row>
+      </pro-form-col>
+    </pro-form-row>
 
-    <com-form-footer>
+    <pro-form-footer>
       <el-button type="primary" @click="submit">
         送出
       </el-button>
-    </com-form-footer>
+    </pro-form-footer>
   </el-form>
 </template>
 ```

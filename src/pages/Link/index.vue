@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import ComFormCol from '@/common/Form/ComFormCol.vue';
-import ComFormRow from '@/common/Form/ComFormRow.vue';
+import ProFormCol from '@/common/Form/ProFormCol.vue';
+import ProFormRow from '@/common/Form/ProFormRow.vue';
 
 
 const navigateList = [
@@ -40,8 +40,8 @@ console.log('colSize', colSize)
 
 
 <template>
-  <com-form-row :gutter="16">
-    <com-form-col v-for="navigate in navigateList" :key="navigate.key" :col-size="colSize">
+  <pro-form-row :gutter="16">
+    <pro-form-col v-for="navigate in navigateList" :key="navigate.key" :col-size="colSize">
       <el-card shadow="hover" class="navigate-card" @click="handleOpenUrl(navigate.url)">
         <template #header>
           <span style="font-size: 18px; font-weight: bold;">
@@ -53,8 +53,8 @@ console.log('colSize', colSize)
           {{ navigate.desc }}
         </div>
       </el-card>
-    </com-form-col>
-  </com-form-row>
+    </pro-form-col>
+  </pro-form-row>
 
 </template>
 

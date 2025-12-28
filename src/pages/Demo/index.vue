@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import ComFormBreadcrumb from '@/common/Field/ComFormBreadcrumb.vue';
+import ProBreadcrumb from '@/common/Field/ProBreadcrumb.vue';
 import { ref } from 'vue';
 const value1 = ref('')
 const value2 = ref('')
@@ -7,7 +7,7 @@ const value3 = ref('')
 </script>
 
 <template>
-  <ComFormBreadcrumb />
+  <ProBreadcrumb />
   測試頁面
   <div>
     <el-date-picker v-model="value1" type="date" placeholder="輸入日期" format="TTT/MM/DD" />

@@ -1,8 +1,11 @@
-<script setup lang="ts">
+/**
+ * 行布局：支援響應式布局，將 24 格布局 轉為 4 格布局 (預設 1 格)
+ */
+ <script setup lang="ts">
 import { computed, useAttrs } from 'vue'
 import type { ColProps } from 'element-plus'
 
-interface ElFormColProps { 
+interface ProFormColProps { 
   /** 
    * 佔用欄位份數 (基於 4 欄系統: 1 份 = span 6)。
    * 可以是數字或響應式物件 { xs: 4, md: 2, lg: 1 }
@@ -13,7 +16,7 @@ interface ElFormColProps {
   colProps?: Partial<ColProps> 
 }
 
-const props = defineProps<ElFormColProps>() 
+const props = defineProps<ProFormColProps>() 
 const attrs = useAttrs()
 
 // 基礎轉換倍率：4 欄系統下，1 份 = 24 / 4 = 6
