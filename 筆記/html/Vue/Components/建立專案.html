@@ -436,9 +436,7 @@ app<span class="token punctuation">.</span>config<span class="token punctuation"
 <span class="token keyword keyword-const">const</span> isCollapse <span class="token operator">=</span> <span class="token function">ref</span><span class="token punctuation">(</span><span class="token boolean">false</span><span class="token punctuation">)</span>
 
 <span class="token comment">// 可顯示的 routes</span>
-<span class="token keyword keyword-const">const</span> routesList <span class="token operator">=</span> router<span class="token punctuation">.</span><span class="token property-access">options</span><span class="token punctuation">.</span><span class="token property-access">routes</span><span class="token punctuation">.</span><span class="token method function property-access">filter</span><span class="token punctuation">(</span><span class="token parameter">route</span> <span class="token arrow operator">=&gt;</span> <span class="token punctuation">{</span>
-  <span class="token keyword control-flow keyword-return">return</span> route<span class="token punctuation">.</span><span class="token property-access">name</span><span class="token operator">?.</span>length <span class="token operator">&gt;</span> <span class="token number">0</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token keyword keyword-const">const</span> routesList <span class="token operator">=</span> router<span class="token punctuation">.</span><span class="token property-access">options</span><span class="token punctuation">.</span><span class="token property-access">routes</span>
 
 <span class="token comment">// 黑暗模式切換（使用 VueUse）</span>
 <span class="token keyword keyword-const">const</span> isDark <span class="token operator">=</span> <span class="token function">useDark</span><span class="token punctuation">(</span><span class="token punctuation">{</span>

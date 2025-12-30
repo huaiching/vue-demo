@@ -13,9 +13,7 @@ const route = useRoute()
 const isCollapse = ref(false)
 
 // 可顯示的 routes
-const routesList = router.options.routes.filter(route => {
-  return route.name?.length > 0
-})
+const routesList = router.options.routes
 
 // 黑暗模式切換（使用 VueUse）
 const isDark = useDark({
