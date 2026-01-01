@@ -9,6 +9,7 @@
 ![alt text](image/slot_01.png)
 
 - 子元件
+  
   > 不需要 預設內容 可使用 `<slot />`
 
 ```html
@@ -69,6 +70,7 @@ const name = ref('')
 ![alt text](image/slot_02.png)
 
 - 子元件
+  
   > 不需要 預設內容 可使用 `<slot name="插槽名" />`
 
 ```html

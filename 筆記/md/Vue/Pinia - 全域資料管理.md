@@ -36,14 +36,17 @@ export const Pinia函式 = defineStore(變數, ()=>{
 ## 頁面使用
 
 - 載入 Pinia
+  
   ```ts
   const piniaStore = Pinia函式()
   ```
 - 使用 變數
+  
   ```ts
   const 變數 = piniaStore.變數
   ```
 - 使用 函式
+  
   ```ts
   piniaStore.應用函式(參數)
   ```
@@ -118,7 +121,7 @@ import DisplayUser from './Components/DisplayUser.vue';
 ### 子元件
 
 - InputUser.vue
-
+  
   ```html
   <script setup lang="ts">
   import { ref } from 'vue'
@@ -185,7 +188,7 @@ import DisplayUser from './Components/DisplayUser.vue';
   ```
 
 - DisplayUser.vue
-
+  
   ```html
   <script setup>
   import { useUserStore } from '../Pinia/UserStore'

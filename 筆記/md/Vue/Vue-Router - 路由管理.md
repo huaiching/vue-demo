@@ -76,6 +76,7 @@ export default router
 ![alt text](image/router_01.png)
 
 要進行 Menu 的權限控管，可利用 `beforEach`，當 `無權限` 時，`return form.path` 返回上一頁。
+
 - `to`：要前往的 router 資訊
 - `form`：目前所在的 router 資訊
 
@@ -152,6 +153,7 @@ const category = computed(() => route.params.category as string)
 ## 頁面跳轉
 
 在頁面中 要進行 頁面跳轉：
+
 - 原分頁跳轉，可透過 `router.path(前往URL)` 處理。
 - 新開分頁跳轉，可透過 `window.open(前往URL, '_blank')` 處理。
 
@@ -183,9 +185,11 @@ const windowPath = (path: string) => {
 如果需要隱式夾帶數據，可參考以下方式處理
 
 - 原頁面跳轉
-  > 參數銷毀 `sessionStorage.removeItem()` 於 接收端 執行。
-  - 傳送端（原頁面）
   
+  > 參數銷毀 `sessionStorage.removeItem()` 於 接收端 執行。
+  
+  - 傳送端（原頁面）
+    
     ```ts
     const data = { name: '測試用戶', age: 25 }
     sessionStorage.setItem('params', JSON.stringify(data))
@@ -193,7 +197,7 @@ const windowPath = (path: string) => {
     ```
   
   - 接收端（新頁面）
-  
+    
     ```ts
     let params: { name: string; age: number } | null = null;
     if (sessionStorage.getItem('params')) {
@@ -203,9 +207,11 @@ const windowPath = (path: string) => {
     ```
 
 - 新開分頁跳轉
-  > 參數銷毀 `sessionStorage.removeItem()` 於 傳送端 執行。
-  - 傳送端（原頁面）
   
+  > 參數銷毀 `sessionStorage.removeItem()` 於 傳送端 執行。
+  
+  - 傳送端（原頁面）
+    
     ```ts
     const data = { name: '測試用戶', age: 25 }
     sessionStorage.setItem('params', JSON.stringify(data))
@@ -214,7 +220,7 @@ const windowPath = (path: string) => {
     ```
   
   - 接收端（新頁面）
-  
+    
     ```ts
     let params: { name: string; age: number } | null = null;
     if (sessionStorage.getItem('params')) {
@@ -225,19 +231,22 @@ const windowPath = (path: string) => {
 ## 重要的 layout 核心組件
 
 - `RouterLink`：路由導航組件
-
+  
   | 屬性                   | 說明                    |
   | -------------------- | --------------------- |
   | `to`                 | 目標路由（字串或物件）           |
   | `replace`            | 使用 replace 模式（不留歷史記錄） |
   | `active-class`       | 連結激活時的 CSS 類名         |
   | `exact-active-class` | 連結精確激活時的 CSS 類名       |
-
+  
   ```html
   <RouterLink to="要前往的URL">按鈕的名稱</RouterLink>
   ```
+
 - `RouterView`：路由視圖組件
+  
   - 負責顯示當前路由對應的組件內容。
-  ```html
-  <RouterView />
-  ```
+    
+    ```html
+    <RouterView />
+    ```

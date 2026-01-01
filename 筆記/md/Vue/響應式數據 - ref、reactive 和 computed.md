@@ -17,13 +17,17 @@
   ```ts
   const 變數 = ref(數值)
   ```
+
 - Setting
   
   > 變數.value = 新數值
+
 - Getting
+  
   - script 
     
     > 變數.value
+  
   - template
     
     > {{ 變數 }}
@@ -66,13 +70,17 @@ const add = () => {
   ```ts
   const 變數 = reactive(數值)
   ```
+
 - Setting
   
   > 變數.欄位 = 新數值
+
 - Getting
+  
   - script 
     
     > 變數.欄位
+  
   - template
     
     > {{ 變數.欄位 }}
@@ -119,10 +127,13 @@ const add = () => {
     return 經過邏輯判斷後，要回傳的數值
   })
   ```
+
 - Getting
+  
   - script 
     
     > 變數.value
+  
   - template
     
     > {{ 變數 }}

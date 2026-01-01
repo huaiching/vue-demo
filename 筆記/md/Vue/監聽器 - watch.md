@@ -3,14 +3,18 @@
 `watch` 是用來監聽 `資料變化` 時，能夠執行 `副作用` 的 vue 內建函式。
 
 適用場景：
+
 - 根據資料變化，呼叫 API
 - 根據資料變化，進行 資料同步作業
 
 可監聽的資料類型：
+
 - ref
+  
   > 若 ref 為 `物件 {}`，則 無法監聽 物件的內部屬性
 - reactive
 - getter 函數
+  
   > () => state.value
 
 監聽的的資料，可以是 `一筆`，也可以是 `多筆` (用 陣列形式 表示)
@@ -18,18 +22,20 @@
 ## 語法
 
 ### 語法結構
-  ```ts
-  watch(source, callback, options?)
-  ```
-  - `source` : 監聽的資料
-  - `callback` : 資料變化
-    - ()
-    - (新數值, 舊數值)
-  - `options` : 額外選項
-    - `immediate` : 建立時立即執行一次回調
-      - true / false(預設)
-    - `deep` : 深度監聽（對物件內部屬性變化也觸發）
-      - true / false(預設)
+
+```ts
+watch(source, callback, options?)
+```
+
+- `source` : 監聽的資料
+- `callback` : 資料變化
+  - ()
+  - (新數值, 舊數值)
+- `options` : 額外選項
+  - `immediate` : 建立時立即執行一次回調
+    - true / false(預設)
+  - `deep` : 深度監聽（對物件內部屬性變化也觸發）
+    - true / false(預設)
 
 ### 使用方式
 
@@ -57,7 +63,6 @@ watch(user, (newUser, oldUser) => {
 </script>
 ```
 
-
 ## 範例
 
 ```html
@@ -83,5 +88,4 @@ watch(count, (newVal, oldVal) => {
 
   <p>{{ message }}</p>
 </template>
-
 ```

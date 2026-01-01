@@ -5,6 +5,7 @@
 ## 1. v-show
 
 單純的條件渲染
+
 - `true`：顯示 元件
 - `false`：隱藏 元件
 
@@ -41,6 +42,7 @@ import { ref } from 'vue';
 ## 2. v-if
 
 複雜情況使用的條件渲染，
+
 - 以下三者搭配使用：
   - v-if
   - v-else-if
@@ -48,7 +50,7 @@ import { ref } from 'vue';
 - 設定皆為
   - `true`：顯示 元件
   - `false`：隱藏 元件
-  
+
 ```html
 <template>
   <元件A v-if="判斷式" />

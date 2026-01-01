@@ -9,6 +9,7 @@
 ### 範例
 
 - 父元件
+  
   ```html
   <script setup lang="ts">
   import Child from './Components/Child.vue'
@@ -24,6 +25,7 @@
   ```
 
 - 子元件
+  
   ```html
   <template>
     <div>
@@ -44,8 +46,9 @@ graph TD
 ### 語法
 
 - 父元件
+  
   > 透過 `:prop="value"` 傳遞數據
-
+  
   ```html
   <template>
     <子元件 :屬性="變數、方法" ... />
@@ -53,8 +56,9 @@ graph TD
   ```
 
 - 子元件
+  
   > 透過 `defineProps()` 接收數據
-
+  
   ```ts
   <script setup lang="ts">
   interface Props {
@@ -73,31 +77,33 @@ graph TD
 ### 範例
 
 - 父元件
+  
   ```html
   <script setup lang="ts">
   import { ref } from 'vue';
   import Child from './Components/Child.vue'
-
+  
   // 傳給子元件的變數
   const name = ref('')
-
+  
   // 傳給子元件的函式
   const sayHello = (name: string): void => {
     alert(`Hello ${name} !`)
   }
   </script>
-
+  
   <template>
     <h1>props - 資料傳遞 (父傳子)</h1>
     <div>
       姓名：<input v-model="name" placeholder="請輸入名稱" />
     </div>
-
+  
     <Child :name="name" :onHello="sayHello" />
   </template>
   ```
 
 - 子元件
+  
   ```html
   <script setup lang="ts">
   interface Props {
@@ -131,9 +137,10 @@ graph BT
 ### 語法
 
 - 子元件
+  
   > 透過 `defineEmits()` 設定事件 <br/>
   > 透過 `emit('事件名', 數據)` 發送事件
-
+  
   ```ts
   <script setup lang="ts">
   // 設定 要傳遞的事件
@@ -150,38 +157,40 @@ graph BT
   ```
 
 - 父元件
+  
   > 透過 `@事件名="處理函數"` 監聽事件
-
+  
   ```html
   <script setup>
     const 對應函式 = (傳遞資料) => {
       處理邏輯
     }
   </script>
-
+  
   <template>
     <子元件 @事件名="對應函式" />
   </template>
   ```
-  
+
 ### 範例
 
 - 子元件
+  
   ```html
   <script setup lang="ts">
   import { ref } from 'vue';
-
+  
   const name = ref('');
-
+  
   // 定義 emit
   const emit = defineEmits(["hello"])
-
+  
   // 觸發 emit
   const sendHello = (): void => {
     emit('hello', name.value)
   }
   </script>
-
+  
   <template>
     <div>
       姓名：<input v-model="name" placeholder="請輸入名稱" />
@@ -193,6 +202,7 @@ graph BT
   ```
 
 - 父元件
+  
   ```html
   <script setup lang="ts">
   import Child from './Components/Child.vue'
