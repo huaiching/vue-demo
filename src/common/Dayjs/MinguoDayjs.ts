@@ -42,103 +42,106 @@ const minguoEra = (option: any, dayjsClass: any) => {
 // ========================================
 const minguoEraParse = (option: any, dayjsClass: any) => {
   const prototype = dayjsClass.prototype
-  const oldParse = prototype.parse  // 保存原始 parse 方法
+  const oldParse = prototype.parse
 
   prototype.parse = function (cfg: any) {
-    let { date, args } = cfg
+    const { date, args } = cfg
 
-    // 基本驗證：無輸入或無格式時直接使用原生解析
+    // 空輸入，不處理
     if (
       !date ||
+      date === null ||
+      date === undefined ||
       typeof date !== 'string' ||
+      date.trim() === '' ||
       !args ||
       !args[1]
     ) {
       return oldParse.call(this, cfg)
     }
 
-    const format: string = args[1].trim()
+    const format = args[1].trim()
 
-    // 只處理包含 TTT 的民國年格式，其他格式不干擾
+    // 只處理含 T 的民國格式
     if (!format.includes('T')) {
       return oldParse.call(this, cfg)
     }
 
-    let inputDate = date.trim()
+    const input = date.trim()
 
-    // ========================
-    // Step 1: 處理各種輸入格式，統一轉為純數字字串（方便後續處理）
-    // ========================
-    let digitsOnly = inputDate.replace(/\D/g, '')  // 移除所有非數字
+    // 提取純數字進行判斷
+    let digitsOnly = input.replace(/\D/g, '')
 
-    // 年月格式補日為 01
-    if (format === 'TTT/MM') {
-      digitsOnly = digitsOnly + '01'
-    }
-    
-    // 處理西元年輸入
-    if (digitsOnly.length === 8) {
+    // 輸入西元年 轉換為 民國年
+    if (format === 'TTT/MM/DD' && digitsOnly.length === 8) {
       const year = parseInt(digitsOnly.slice(0, 4), 10) - 1911
       const month = parseInt(digitsOnly.slice(4, 6), 10)
       const day = parseInt(digitsOnly.slice(6, 8), 10)
-      digitsOnly = `${String(year).padStart(3, '0')}${String(month).padStart(2, '0')}${String(day).padStart(2, '0')}`
+      digitsOnly = String(year).padStart(3, '0') + String(month).padStart(2, '0') + String(day).padStart(2, '0')
+    }
+    if (format === 'TTT/MM' && digitsOnly.length === 6) {
+      const year = parseInt(digitsOnly.slice(0, 4), 10) - 1911
+      const month = parseInt(digitsOnly.slice(4, 6), 10)
+      digitsOnly = String(year).padStart(3, '0') + String(month).padStart(2, '0')
     }
 
-    // ========================
-    // Step 2: 處理無分隔符純數字輸入（台灣最常見用法）
-    //    6碼：民國2位年（如 140101 → 民國14年）
-    //    7碼：民國3位年（如 1140101 → 民國114年）
-    // ========================
-    if (digitsOnly.length === 6 || digitsOnly.length === 7) {
-      let minguoYearStr: string
-      let monthStr: string
-      let dayStr: string = ''
+    // 是否為年月格式（用於決定補日與輸出格式）
+    const isMonthPicker = format.includes('TTT/MM') && !format.includes('DD')
 
-      if (digitsOnly.length === 6) {
-        // 6碼：年2碼 + 月2碼 + 日2碼
-        minguoYearStr = digitsOnly.slice(0, 2).padStart(3, '0')  // "14" → "014"
-        monthStr = digitsOnly.slice(2, 4)
-        dayStr = digitsOnly.slice(4, 6)
-      } else {
-        // 7碼：年3碼 + 月2碼 + 日2碼
-        minguoYearStr = digitsOnly.slice(0, 3)
-        monthStr = digitsOnly.slice(3, 5)
-        dayStr = digitsOnly.slice(5, 7)
+    let targetDigits: string | null = null
+    let isValidInput = false
+
+    if (isMonthPicker) {
+      // 年月選擇器：接受 5 位純數字（如 11412）
+      if (digitsOnly.length === 5) {
+        targetDigits = digitsOnly + '01'  // 補日為 01 → 變成 7 位處理
+        isValidInput = true
       }
+    } else {
+      // 一般日期選擇器：接受 7 位純數字（如 1141231）
+      if (digitsOnly.length === 7) {
+        targetDigits = digitsOnly
+        isValidInput = true
+      }
+    }
 
-      // ========================
-      // Step 3: 嚴格日期校驗（使用外部 isValidDate 工具）
-      // ========================
-      const fullMinguoDateStr = `${minguoYearStr.padStart(3, '0')}${monthStr.padStart(2, '0')}${dayStr.padStart(2, '0')}`
+    // ===== 如果提取到正確長度的純數字，才進行解析 =====
+    if (isValidInput && targetDigits) {
+      const minguoYearStr = targetDigits.slice(0, 3)
+      const monthStr = targetDigits.slice(3, 5)
+      const dayStr = targetDigits.slice(5, 7)
 
-      if (isValidDate(fullMinguoDateStr)) {
-        // 日期合法 → 轉換為西元年格式供 Day.js 解析
+      const fullMinguoStr = minguoYearStr + monthStr + dayStr
+
+      if (isValidDate(fullMinguoStr)) {
         const gregorianYear = parseInt(minguoYearStr, 10) + YEAR_BIAS
 
-        let gregorianFormatted: string
+        let gregorianDateStr: string
         let newFormat: string
 
-        if (format.includes('DD')) {
-          gregorianFormatted = `${gregorianYear}/${monthStr.padStart(2, '0')}/${dayStr.padStart(2, '0')}`
-          newFormat = 'YYYY/MM/DD'
-        } else {
-          gregorianFormatted = `${gregorianYear}/${monthStr.padStart(2, '0')}`
+        if (isMonthPicker) {
+          gregorianDateStr = `${gregorianYear}/${monthStr}/01`
           newFormat = 'YYYY/MM'
+        } else {
+          gregorianDateStr = `${gregorianYear}/${monthStr}/${dayStr}`
+          newFormat = 'YYYY/MM/DD'
         }
 
         return oldParse.call(this, {
           ...cfg,
-          date: gregorianFormatted,
-          args: [gregorianFormatted, newFormat],
+          date: gregorianDateStr,
+          args: [gregorianDateStr, newFormat],
         })
       } else {
-        // 日期無效（如 114/01/50、114/02/30）
-        // 顯示錯誤訊息
-        ElMessage.error('日期格式錯誤，請檢查年月日是否正確')
-
-        return null
+        // ===== 日期無效：回傳 空白日期 =====
+        this.$d = new Date(NaN)
+        this.$invalid = true
+        return this
       }
     }
+
+    // 其他所有情況，一律不干涉
+    return oldParse.call(this, cfg)
   }
 }
 
