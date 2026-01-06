@@ -1323,27 +1323,25 @@ yarn add -D @element-plus/icons-vue unplugin-auto-import unplugin-vue-components
 <h2 class="atx" id="5-新增-element-plus-的-民國年日期套件">5. 新增 element plus 的 民國年日期套件</h2>
 <p>於 <code>src/common/Dayjs</code> 新增檔案 <code>MinguoDayjs.ts</code></p>
 <pre><code class="fenced-code-block language-ts"><span class="token comment">/**
- * 民國年支援套件（Vue 3 + Element Plus + Day.js）
+ * 民國年支援套件
  *
  * 主要特色：
  * 1. 輸入框顯示民國年格式：TTT/MM/DD → 114/12/27
  * 2. 手動輸入支援多種格式：114/12/27、1141227、1140101、14-01-01、140101 等
  * 3. 選擇器面板標頭顯示「114 年 12 月」
  * 4. 年份選擇面板顯示民國年：109 ~ 118
- * 5. v-model 綁定值仍為標準西元年字串（YYYY-MM-DD）
  */</span>
 
 <span class="token keyword">import</span> dayjs <span class="token keyword">from</span> <span class="token string">'dayjs'</span>
 <span class="token keyword">import</span> <span class="token string">'dayjs/locale/zh-tw'</span>
 <span class="token keyword">import</span> customParseFormat <span class="token keyword">from</span> <span class="token string">'dayjs/plugin/customParseFormat'</span>
-<span class="token keyword">import</span> <span class="token punctuation">{</span> ElMessage <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'element-plus'</span>
 
-<span class="token keyword">const</span> <span class="token constant">YEAR_BIAS</span> <span class="token operator">=</span> <span class="token number">1911</span>  <span class="token comment">// 民國紀年與西元紀年的差值（1911）</span>
+<span class="token keyword">const</span> <span class="token constant">YEAR_BIAS</span> <span class="token operator">=</span> <span class="token number">1911</span>
 
 <span class="token comment">// ========================================</span>
-<span class="token comment">// 1. 顯示插件：負責將 TTT 轉換為民國年顯示</span>
+<span class="token comment">// 顯示插件：負責將 TTT 轉換為民國年顯示</span>
 <span class="token comment">// ========================================</span>
-<span class="token keyword">const</span> <span class="token function-variable function">minguoEra</span> <span class="token operator">=</span> <span class="token punctuation">(</span>option<span class="token operator">:</span> <span class="token builtin">any</span><span class="token punctuation">,</span> dayjsClass<span class="token operator">:</span> <span class="token builtin">any</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+<span class="token keyword">const</span> <span class="token function-variable function">minguoFormat</span> <span class="token operator">=</span> <span class="token punctuation">(</span>option<span class="token operator">:</span> <span class="token builtin">any</span><span class="token punctuation">,</span> dayjsClass<span class="token operator">:</span> <span class="token builtin">any</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
   <span class="token keyword">const</span> prototype <span class="token operator">=</span> dayjsClass<span class="token punctuation">.</span>prototype
   <span class="token keyword">const</span> oldFormat <span class="token operator">=</span> prototype<span class="token punctuation">.</span>format  <span class="token comment">// 保存原始 format 方法</span>
 
@@ -1361,10 +1359,9 @@ yarn add -D @element-plus/icons-vue unplugin-auto-import unplugin-vue-components
 <span class="token punctuation">}</span>
 
 <span class="token comment">// ========================================</span>
-<span class="token comment">// 2. 解析插件：負責將使用者輸入的民國年轉換為 Day.js 可理解的西元年格式</span>
-<span class="token comment">//    支援：有分隔符、無分隔符、西元年輸入，並加入嚴格日期校驗</span>
+<span class="token comment">// 解析插件：負責將使用者輸入的民國年轉換為 Day.js 可理解的西元年格式</span>
 <span class="token comment">// ========================================</span>
-<span class="token keyword">const</span> <span class="token function-variable function">minguoEraParse</span> <span class="token operator">=</span> <span class="token punctuation">(</span>option<span class="token operator">:</span> <span class="token builtin">any</span><span class="token punctuation">,</span> dayjsClass<span class="token operator">:</span> <span class="token builtin">any</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+<span class="token keyword">const</span> <span class="token function-variable function">minguoParse</span> <span class="token operator">=</span> <span class="token punctuation">(</span>option<span class="token operator">:</span> <span class="token builtin">any</span><span class="token punctuation">,</span> dayjsClass<span class="token operator">:</span> <span class="token builtin">any</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
   <span class="token keyword">const</span> prototype <span class="token operator">=</span> dayjsClass<span class="token punctuation">.</span>prototype
   <span class="token keyword">const</span> oldParse <span class="token operator">=</span> prototype<span class="token punctuation">.</span>parse
 
@@ -1470,7 +1467,7 @@ yarn add -D @element-plus/icons-vue unplugin-auto-import unplugin-vue-components
 <span class="token punctuation">}</span>
 
 <span class="token comment">// ========================================</span>
-<span class="token comment">// 3. 覆寫 year() 方法：讓面板標頭與年份選擇器顯示民國年</span>
+<span class="token comment">// 覆寫 year() 方法：讓面板標頭與年份選擇器顯示民國年</span>
 <span class="token comment">// ========================================</span>
 <span class="token keyword">const</span> <span class="token function-variable function">overrideYearMethod</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
   <span class="token keyword">const</span> originalYear <span class="token operator">=</span> dayjs<span class="token punctuation">.</span>prototype<span class="token punctuation">.</span>year
@@ -1518,20 +1515,14 @@ yarn add -D @element-plus/icons-vue unplugin-auto-import unplugin-vue-components
 <span class="token punctuation">}</span>
 
 <span class="token comment">// ========================================</span>
-<span class="token comment">// 輔助函數：跳脫正則特殊字元（用於處理分隔符 /）</span>
-<span class="token keyword">function</span> <span class="token function">escapeRegExp</span><span class="token punctuation">(</span>str<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">)</span><span class="token operator">:</span> <span class="token builtin">string</span> <span class="token punctuation">{</span>
-  <span class="token keyword">return</span> str<span class="token punctuation">.</span><span class="token function">replace</span><span class="token punctuation">(</span><span class="token regex"><span class="token regex-delimiter">/</span><span class="token regex-source language-regex">[.*+?^${}()|[\]\\]</span><span class="token regex-delimiter">/</span><span class="token regex-flags">g</span></span><span class="token punctuation">,</span> <span class="token string">'\\$&amp;'</span><span class="token punctuation">)</span>
-<span class="token punctuation">}</span>
-
-<span class="token comment">// ========================================</span>
 <span class="token comment">// 初始化函數：專案啟動時呼叫</span>
 <span class="token keyword">export</span> <span class="token keyword">function</span> <span class="token function">setupMinguoDayjs</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   dayjs<span class="token punctuation">.</span><span class="token function">locale</span><span class="token punctuation">(</span><span class="token string">'zh-tw'</span><span class="token punctuation">)</span>           <span class="token comment">// 設定繁體中文語系</span>
   dayjs<span class="token punctuation">.</span><span class="token function">extend</span><span class="token punctuation">(</span>customParseFormat<span class="token punctuation">)</span> <span class="token comment">// 啟用自訂格式解析</span>
 
   <span class="token comment">// 套用插件</span>
-  dayjs<span class="token punctuation">.</span><span class="token function">extend</span><span class="token punctuation">(</span>minguoEra<span class="token punctuation">)</span>         <span class="token comment">// 顯示民國年</span>
-  dayjs<span class="token punctuation">.</span><span class="token function">extend</span><span class="token punctuation">(</span>minguoEraParse<span class="token punctuation">)</span>    <span class="token comment">// 解析民國年輸入</span>
+  dayjs<span class="token punctuation">.</span><span class="token function">extend</span><span class="token punctuation">(</span>minguoFormat<span class="token punctuation">)</span>      <span class="token comment">// 顯示民國年</span>
+  dayjs<span class="token punctuation">.</span><span class="token function">extend</span><span class="token punctuation">(</span>minguoParse<span class="token punctuation">)</span>       <span class="token comment">// 解析民國年輸入</span>
 
   <span class="token comment">// 讓面板顯示民國年</span>
   <span class="token function">overrideYearMethod</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
